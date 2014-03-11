@@ -15,6 +15,11 @@ import obj.Question;
 import classes.Main;
 import classes.Text;
 
+/**
+ * Window displayed to program administrator during play;
+ * Enables answer toggling, advancing questions, triggering end-game
+ * @author Jon Paul
+ */
 public class AdminWindow extends JFrame {
 	private int					buttonCount, totalPoints;
 	private JLabel				ansLabel, teamLabel;
