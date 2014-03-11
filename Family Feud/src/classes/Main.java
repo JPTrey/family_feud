@@ -19,8 +19,6 @@ import obj.QuestionPack;
 import obj.Team;
 
 public class Main {
-
-	// github test
 	
 	/* Global Variables */
 	public static final boolean		DEBUG = true;			// true: debug methods and statements will be shown
