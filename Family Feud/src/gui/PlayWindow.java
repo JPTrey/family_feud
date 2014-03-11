@@ -14,9 +14,9 @@ import classes.Main;
 import classes.Text;
 
 /**
- * Window displayed to players
+ * Window displayed to players;
  * Displays question text, total points, current team, total strikes and, when selected, answer labels
- * @author jonpaulsimonelli
+ * @author Jon Paul
  */
 public class PlayWindow extends JFrame {
 //	private String				title;
