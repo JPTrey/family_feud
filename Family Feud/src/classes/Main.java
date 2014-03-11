@@ -20,6 +20,8 @@ import obj.Team;
 
 public class Main {
 
+	// github test
+	
 	/* Global Variables */
 	public static final boolean		DEBUG = true;			// true: debug methods and statements will be shown
 	public static final boolean		SPLIT_SCREEN = true;	// true: builds admin frame
