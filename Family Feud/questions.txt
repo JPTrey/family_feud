@@ -1,0 +1,11 @@
+PACK::'TEST'
+Q::"Things programmers always forget:"
+	A::"Semi-colon"=50
+	A::"stdio.h"=25
+	A::"Spelling"=24
+	A::"Bathing"=1
+Q::"Nicknames for Dr. Leo Porter:"
+	A::"Porterhouse"=74
+	A::"Leo 3000"=16
+	A::"Leo LaPorter"=10
+END	
