@@ -58,11 +58,8 @@ public class Main {
 	//TODO make pretty
 
 	public static void main(String[] args) throws FileNotFoundException { 
-		if (DEBUG) { playGame(); }
-		else  { 
-			showMenu(); 
-			Thread.yield();	
-		}
+		if (DEBUG) { playGame(); }		// skip menu
+		else  { showMenu(); }
 	}
 
 	public static void playGame() {
@@ -70,7 +67,7 @@ public class Main {
 
 		if (DEBUG) { 
 			showAllQuestions();
-			for (int i=0; i<MAX_TEAMS; i++) {			// example teams
+			for (int i=0; i<MAX_TEAMS; i++) {			// placeholder teams
 				teams[i] = new Team("Test Team " + (i+1));
 				teams[i].addPlayer(new Player("Test Player " + (i+1)));
 				Text.debug("Team " + (i+1) + ":Player " + (i+1));
@@ -79,8 +76,6 @@ public class Main {
 		else { 
 			for (int i=0; i<MAX_TEAMS; i++) { addTeam(i); }
 		}
-//		cur_team = -1;
-//		while (cur_team == -1) ;
 		nextQuestion(0);
 		while (qpack.hasNext()) { nextTurn(); }	
 	}
@@ -107,12 +102,19 @@ public class Main {
 	/**
 	 * Creates a new PlayWindow for each new question
 	 */
-	private static void makePlayWindow() { play = new PlayWindow(PLAY_TITLE, cur_question); }
+	private static void makePlayWindow() { 
+		if (play == null) { play = new PlayWindow(PLAY_TITLE, cur_question); }
+		else { play.setQuestion(cur_question); }
+		
+	}
 
 	/**
 	 * Creates a new AdminWindow for each new question
 	 */
-	private static void makeAdminWindow() { admin = new AdminWindow(ADMIN_TITLE, cur_question, play); }
+	private static void makeAdminWindow() { 
+		if (admin == null) { admin = new AdminWindow(ADMIN_TITLE, cur_question, play); }
+		else { admin.setQuestion(cur_question); }
+	}
 
 	private static void addTeam(int slot) {
 		String		name, playerName;
@@ -155,8 +157,11 @@ public class Main {
 		int					aPoints;
 		boolean				foundPack = false;
 
-		Text.out("Question Pack name: ");
-		packname = (new Scanner(System.in)).nextLine();
+		if (DEBUG) { packname = "dogs"; }
+		else {
+			Text.out("Question Pack name: ");
+			packname = (new Scanner(System.in)).nextLine();
+		}
 
 		String str = fileSC.nextLine();
 		Text.debug("Loading Question Pack '" + packname + "'");
