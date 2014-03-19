@@ -24,7 +24,7 @@ public class AdminWindow extends JFrame {
 	private int					buttonCount, totalPoints;
 	private JLabel				ansLabel, teamLabel;
 	private JPanel				mainPanel, ansPanel, controlPanel;
-	private JButton				strikeButton, nextQuestButton, setTeam1Button, setTeam2Button, endGameButton;
+	private JButton				strikeButton, endQuestButton, nextQuestButton, setTeam1Button, setTeam2Button, endGameButton;
 	private AnswerButton		a1, a2, a3, a4, a5, a6, a7, a8, a9, a10;
 	private Question			q;			// question currently associated with this window, and PlayWindow
 	private PlayWindow			pw;			// PlayWindow associated with this AdminWindow
@@ -37,7 +37,7 @@ public class AdminWindow extends JFrame {
 
 		mainPanel = new JPanel(new GridLayout(2,1,5,0));
 		setQuestion(q);
-//		setupControlPanel();
+		//		setupControlPanel();
 		buttonCount = q.answerCount();
 		mainPanel.add(ansPanel);
 		mainPanel.add(controlPanel);
@@ -55,7 +55,20 @@ public class AdminWindow extends JFrame {
 	public void setQuestion(Question q) {
 		//		questPanel = new JPanel();
 		if (ansPanel == null) { ansPanel = new JPanel(); }
-		//		questLabel = new JLabel(q.getText());
+
+		else {
+			if (a10 != null) { a10.setVisible(false);}
+			if (a9 != null) { a9.setVisible(false);}
+			if (a8 != null) { a8.setVisible(false);}
+			if (a7 != null) { a7.setVisible(false);}
+			if (a6 != null) { a6.setVisible(false);}
+			if (a5 != null) { a5.setVisible(false);}
+			if (a4 != null) { a4.setVisible(false);}
+			if (a3 != null) { a3.setVisible(false);}
+			if (a2 != null) { a2.setVisible(false);}
+			if (a1 != null) { a1.setVisible(false);}
+		}
+
 		switch (q.answerCount()) {				// assign a button for each answer
 		case 10: 	a10 = new AnswerButton(q.getAnswers().get(9),this); ansPanel.add(a10);
 		case 9:		a9 = new AnswerButton(q.getAnswers().get(8),this); ansPanel.add(a9);
@@ -77,6 +90,7 @@ public class AdminWindow extends JFrame {
 		setupControlPanel();
 		switchTeamLabel();
 		ansPanel.setVisible(true);
+		this.q = q;
 	}
 
 	private void setupControlPanel() {
@@ -89,26 +103,39 @@ public class AdminWindow extends JFrame {
 				}
 			});
 
+			endQuestButton = new JButton("End Question");
+			endQuestButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ae) { 
+					revealAll();
+					nextQuestButton.setVisible(true);
+					endQuestButton.setVisible(false);
+				}
+			});
+			
 			nextQuestButton = new JButton("Next Question");
 			nextQuestButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent ae) { Main.nextQuestion(totalPoints); }
+				public void actionPerformed(ActionEvent ae) { 
+					Main.nextQuestion(totalPoints);
+				}
 			});
 			nextQuestButton.setVisible(false);
 
-			setTeam1Button = new JButton("Team " + Main.getTEAM_NAME(0));
+			setTeam1Button = new JButton("Team '" + Main.getTEAM_NAME(0) + "'");
 			setTeam1Button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ae) { 
 					Main.setCUR_TEAM(0); 
 					pw.switchTeamLabel(); 
+					pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
 					setTeam1Button.setVisible(false);
 					setTeam2Button.setVisible(false);
 				}
 			});
-			setTeam2Button = new JButton("Team " + Main.getTEAM_NAME(1));
+			setTeam2Button = new JButton("Team '" + Main.getTEAM_NAME(1) + "'");
 			setTeam2Button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ae) { 
 					Main.setCUR_TEAM(1); 
 					pw.switchTeamLabel();
+					pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
 					setTeam1Button.setVisible(false);
 					setTeam2Button.setVisible(false);
 				}
@@ -126,15 +153,18 @@ public class AdminWindow extends JFrame {
 			controlPanel.add(strikeButton);
 			controlPanel.add(setTeam1Button);
 			controlPanel.add(setTeam2Button);
+			controlPanel.add(endQuestButton);
 			controlPanel.add(nextQuestButton);
+			controlPanel.add(endGameButton);
 		}
-		
+
 		else {
 			setTeam1Button.setVisible(true);
 			setTeam2Button.setVisible(true);
-			nextQuestButton.setVisible(false);		
+			endQuestButton.setVisible(true);
+			nextQuestButton.setVisible(false);
 		}
-		
+
 	}
 
 	// TODO: allow PW to enable visibility
@@ -175,5 +205,21 @@ public class AdminWindow extends JFrame {
 		totalPoints += ans.getPoints();
 		buttonCount--;
 		if (buttonCount == 0) { nextQuestButton.setVisible(true); }
+	}
+
+	private void revealAll() {
+		switch (q.answerCount()) {
+		case 10: 	pw.revealAnswer(a10.getAnswer()); a10.setVisible(false);
+		case 9:		pw.revealAnswer(a9.getAnswer()); a9.setVisible(false);
+		case 8:		pw.revealAnswer(a8.getAnswer()); a8.setVisible(false);
+		case 7: 	pw.revealAnswer(a7.getAnswer()); a7.setVisible(false);
+		case 6:		pw.revealAnswer(a6.getAnswer()); a6.setVisible(false);
+		case 5:		pw.revealAnswer(a5.getAnswer()); a5.setVisible(false);
+		case 4:		pw.revealAnswer(a4.getAnswer()); a4.setVisible(false);
+		case 3:		pw.revealAnswer(a3.getAnswer()); a3.setVisible(false);
+		case 2:		pw.revealAnswer(a2.getAnswer()); a2.setVisible(false);
+		case 1:		pw.revealAnswer(a1.getAnswer()); a1.setVisible(false); break;
+		default: 	Text.debug("Answers not found!"); break;
+		}
 	}
 }

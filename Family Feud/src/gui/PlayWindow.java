@@ -36,6 +36,8 @@ public class PlayWindow extends JFrame {
 		setQuestion(q);
 
 		background = new JLabel(new ImageIcon("images.jpeg"));
+		background.setSize(this.getSize());
+		
 
 		numPanel.add(setupPointsPanel(),BorderLayout.EAST);
 		numPanel.add(setupTeamPanel(),BorderLayout.WEST);

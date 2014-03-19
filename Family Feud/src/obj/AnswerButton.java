@@ -30,6 +30,7 @@ public class AnswerButton extends JButton {
 	}
 	
 	public String getText() { return text + " " + points + "%"; }		// button text
+	public Answer getAnswer() { return ans; }
 	public String getAnswerText() { return text; }
 	public int getPoints() { return points; }
 }

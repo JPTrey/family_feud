@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 
 import obj.Answer;
 import obj.Player;
@@ -19,7 +20,7 @@ import obj.QuestionPack;
 import obj.Team;
 
 public class Main {
-	
+
 	/* Global Variables */
 	public static final boolean		DEBUG = true;			// true: debug methods and statements will be shown
 	public static final boolean		SPLIT_SCREEN = true;	// true: builds admin frame
@@ -31,6 +32,7 @@ public class Main {
 	public static final int			MAX_TEAMS = 2;
 	public static final int			MAX_TEAM_SIZE = 10;
 	public static final int			MAX_STRIKES = 3;
+	public static final int			POINTS_TO_WIN = 300;
 	public static final long		DRAMATIC_PAUSE = 1000;	// in milliseconds
 	public static final String		ADMIN_TITLE = "Administrator";
 	public static final String		PLAY_TITLE = "Family Feud";
@@ -38,12 +40,13 @@ public class Main {
 	public static File				QUESTION_FILE = new File("dogs.txt");
 	private static Dimension		MENU_DIM = new Dimension(800,600);
 	private static Dimension		PLAY_DIM = new Dimension(1024,768);
-	private static Dimension		ADMIN_DIM = new Dimension(480,200);
+	private static Dimension		ADMIN_DIM = new Dimension(480,300);
 
 	/* Setup Variable */
 	private static QuestionPack 	qpack;						// collection of questions
 	private static Team[]			teams = new Team[MAX_TEAMS];
 	private static Question 		cur_question;				// current question sent by QuestionPack
+	private static int				cur_question_num;
 	private static int				cur_team, cur_player;		// slot indices for arrays
 	private static int				cur_turn;					// turn count
 	private	static JFrame			title, menu;
@@ -66,18 +69,24 @@ public class Main {
 		try { loadQuestions(); } catch (FileNotFoundException e) { e.printStackTrace(); }
 
 		if (DEBUG) { 
+			Scanner sc = new Scanner(System.in);
 			showAllQuestions();
 			for (int i=0; i<MAX_TEAMS; i++) {			// placeholder teams
-				teams[i] = new Team("Test Team " + (i+1));
-				teams[i].addPlayer(new Player("Test Player " + (i+1)));
+				Text.out("\nTeam " + i + " name: ");
+				teams[i] = new Team(sc.nextLine());
+				Text.out("\nPlayer " + i + " name: ");
+				teams[i].addPlayer(new Player(sc.nextLine()));
+//				teams[i].addPlayer(new Player("Test Player " + (i+1)));
+//				teams[i].addPlayer(new Player("Test Player " + (i+2)));
 				Text.debug("Team " + (i+1) + ":Player " + (i+1));
 			}
 		}
 		else { 
 			for (int i=0; i<MAX_TEAMS; i++) { addTeam(i); }
 		}
+		cur_player = 0;
 		nextQuestion(0);
-		while (qpack.hasNext()) { nextTurn(); }	
+		while (qpack.hasNext()) { ; }	
 	}
 
 	/* Setup methods */
@@ -105,14 +114,15 @@ public class Main {
 	private static void makePlayWindow() { 
 		if (play == null) { play = new PlayWindow(PLAY_TITLE, cur_question); }
 		else { play.setQuestion(cur_question); }
-		
+
 	}
 
 	/**
 	 * Creates a new AdminWindow for each new question
 	 */
 	private static void makeAdminWindow() { 
-		if (admin == null) { admin = new AdminWindow(ADMIN_TITLE, cur_question, play); }
+		if (admin == null) { admin = new AdminWindow(ADMIN_TITLE + " - Question " + cur_question_num +
+				" of " + qpack.size(), cur_question, play); }
 		else { admin.setQuestion(cur_question); }
 	}
 
@@ -201,7 +211,10 @@ public class Main {
 		}
 
 		Text.debug("str = " + str);
-		if (foundPack)	{ qpack = new QuestionPack(packname, questions); }
+		if (foundPack)	{ 
+			qpack = new QuestionPack(packname, questions); 
+			cur_question_num = 0;
+		}
 		else {
 			Text.out(packname + " not found! Create a new pack named " + packname + "?\n[0] Yes\n[1] No");
 			int choice = Input.getInt(2);
@@ -213,7 +226,23 @@ public class Main {
 	/* END Setup methods */
 
 	private static void showAllQuestions() { qpack.showAllEntries(); }
-	
+
+	public static void addPoints(int points) {
+		teams[cur_team].addPoints(points);
+		if (teams[cur_team].getPoints() >= POINTS_TO_WIN) {
+			declareWinner(cur_team);
+		}
+
+	}
+
+	private static void declareWinner(int cur_team2) {
+		JPanel winnerPanel = new JPanel();
+		winnerPanel.setSize(play.getSize());
+		winnerPanel.setVisible(true);
+		play.add(winnerPanel);
+
+	}
+
 	/**
 	 * Called after all answers have been revealed
 	 * Gets new question, at random, from QuestionPack
@@ -221,46 +250,52 @@ public class Main {
 	 */
 	public static void nextQuestion(int points) {
 		teams[cur_team].addPoints(points);
-		cur_question = qpack.getQuestion();
-		Text.out(cur_question.getText() + "\n");
-		makePlayWindow();
-		if (SPLIT_SCREEN) { makeAdminWindow(); }
+		cur_question_num++;
+		if (qpack.size() == 0) { declareWinner(cur_team); }
+		else { 
+			cur_question = qpack.getQuestion();
+			Text.out(cur_question.getText() + "\n");
+			makePlayWindow();
+			if (SPLIT_SCREEN) { makeAdminWindow(); }
+		}
 	}
 
 	/** 
 	 * Called after each answer
 	 * TODO end play after all questions are answered
 	 */
-	private static void nextTurn() {
-		cur_turn++;
-//		if (cur_question == null || cur_question.answerCount() == 0) { nextQuestion(); }		// if: question is finished
-		playerTurn();
-	}
+	//	private static void nextTurn() {
+	//		cur_turn++;
+	////		if (cur_question == null || cur_question.answerCount() == 0) { nextQuestion(); }		// if: question is finished
+	//		playerTurn();
+	//	}
 
 	/**
 	 * Called when the current player receives a strike; every turn is ALT_EVERY_TURN == true
 	 */
 	public static void nextPlayer() {
 		cur_player++;
-		if (cur_player > teams[cur_team].size()) { cur_player = 0; }		
-		teams[cur_team].nextPlayer(cur_player);
+		Text.debug("cur_player = " + cur_player);
+		if (cur_player == teams[cur_team].size()) { cur_player = 0; }		
+		//		teams[cur_team].nextPlayer(cur_player);
 		play.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 	}
 
-	private static void playerTurn() {
-		String			answer;
-
-		//		if (cur_question.markAnswer(answer)) {
-		//			teams[cur_team].addStrike();
-		//			nextPlayer();
-		//		}
-		//		else if (ALT_EVERY_TURN) { nextPlayer(); }
-	}
+	//	private static void playerTurn() {
+	//		String			answer;
+	//
+	//		//		if (cur_question.markAnswer(answer)) {
+	//		//			teams[cur_team].addStrike();
+	//		//			nextPlayer();
+	//		//		}
+	//		//		else if (ALT_EVERY_TURN) { nextPlayer(); }
+	//	}
 
 	public static void addStrike() {
 		teams[cur_team].addStrike();
 		if (teams[cur_team].checkStrikes()) { switchTeams(); }									// if: team has too many strikes
-		play.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+		nextPlayer();
+		//		play.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 	}
 
 	/**
@@ -288,6 +323,7 @@ public class Main {
 	public static Dimension getPLAY_DIM() { return PLAY_DIM; }
 	public static Dimension getMENU_DIM() { return MENU_DIM; }
 	public static Team getCUR_TEAM() { return teams[cur_team]; }
+	public static String getCUR_PLAYER_NAME() { return teams[cur_team].getPlayerName(cur_player); }
 	public static String getTEAM_NAME(int i) { return teams[i].getName(); }
 	public static void setCUR_TEAM(int i) { cur_team = i; }
 	public static void setQUESTIONS(File qUESTIONS) { QUESTION_FILE = qUESTIONS; }
