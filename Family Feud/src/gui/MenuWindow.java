@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -17,7 +18,7 @@ import classes.Main;
  * Initial menu window when program launches
  * @author jonpaulsimonelli
  */
-public class MenuWindow extends JFrame implements Runnable {
+public class MenuWindow extends JFrame {
 	private JPanel			mainPanel, playPanel, loadPanel, exitPanel, aboutPanel;
 	private JTextArea		textArea;
 	private JButton			playButton, loadButton, confirmLoadButton, quitButton, aboutButton;
@@ -70,11 +71,10 @@ public class MenuWindow extends JFrame implements Runnable {
 		playButton.setVisible(true);
 	}
 
-	@Override
-	public void run() {
-		mainPanel = new JPanel(new GridLayout(3,1,5,0));
+	public MenuWindow() {
+		mainPanel = new JPanel(new GridLayout(3,1,100,100));
 		playPanel = new JPanel();
-		loadPanel = new JPanel(new BorderLayout());
+		loadPanel = new JPanel(new GridLayout(1,2,100,100));
 		exitPanel = new JPanel();
 		
 		playButton = new JButton("Play");
@@ -86,13 +86,17 @@ public class MenuWindow extends JFrame implements Runnable {
 		playButton.setVisible(false);
 		playPanel.add(playButton);
 		
-		loadButton = new JButton("Load Questions");
+		loadButton = new JButton("Load");
 		loadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				load();
 			}
 		});
 		loadPanel.add(loadButton, BorderLayout.WEST);
+		loadPanel.setBounds(new Rectangle(10,20));
+		
+		textArea = new JTextArea();
+		loadPanel.add(textArea, BorderLayout.CENTER);
 		
 		quitButton = new JButton("Quit");
 		quitButton.addActionListener(new ActionListener() {
@@ -110,5 +114,9 @@ public class MenuWindow extends JFrame implements Runnable {
 		setSize(Main.getMENU_DIM());
 		setTitle(Main.PLAY_TITLE + " Configuation");
 		setVisible(true);
+	}
+
+	public static void main(String[] args) {
+		MenuWindow mw = new MenuWindow();
 	}
 }

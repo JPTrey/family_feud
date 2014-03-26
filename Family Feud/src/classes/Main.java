@@ -75,20 +75,7 @@ public class Main {
 	/* Setup methods */
 
 	private static void showMenu() {
-		//		title = new JFrame();				// Splash screen
-		(new Thread(new MenuWindow())).start();		// Main Menu screen
-		menubar = new JMenuBar();					// Menubar displayed at all times
 
-		//		menu.setVisible(false);
-		//		menubar.setVisible(false);
-		//		menu.add(menubar);
-
-		/* Setup Menubar */
-		//		menubar.
-
-		/* Display Splash */
-		//		title.setTitle("Family Feud");
-		//		title.setJMenuBar(menubar);
 	}
 
 	/**
