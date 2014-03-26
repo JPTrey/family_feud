@@ -20,7 +20,9 @@ public class Team {
 			strikes = 0;
 			return true;
 		} 
-		else { return false; }
+		else { 
+			return false; 
+		}
 	}
 
 	public void addPlayer(Player p) { 
@@ -40,7 +42,6 @@ public class Team {
 	public int size() { return players.size(); }
 	public void addPoints(int points) { this.points += points; }
 	public void addStrike() { strikes++; }
-//	public Player nextPlayer(int cur_player) { return players.get(cur_player); }
 	public String getName() { return name; }
 	public String getPlayerName(int cur_player) { return players.get(cur_player).getName(); }
 	public int getPoints() { return points; }

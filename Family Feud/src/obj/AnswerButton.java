@@ -13,23 +13,25 @@ import javax.swing.JButton;
  */
 public class AnswerButton extends JButton {
 	private String				text;
-	private int					points;
+	private int					points, slot;
 	private Answer				ans;
 	private AdminWindow 		aw;			// AdminWindow associated with this 
 	
-	public AnswerButton(final Answer ans, final AdminWindow aw) {
+	public AnswerButton(final Answer ans, final int slot, final AdminWindow aw) {
 		this.text = ans.getText();
+		this.slot = slot;
 		this.points = ans.getPoints();
 		this.ans = ans;
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				aw.revealAnswer(ans);
+				aw.revealAnswer(ans, slot);
 			}
 		});
 		setVisible(true);
 	}
 	
 	public String getText() { return text + " " + points + "%"; }		// button text
+	public int getSlot() { return slot; }
 	public Answer getAnswer() { return ans; }
 	public String getAnswerText() { return text; }
 	public int getPoints() { return points; }

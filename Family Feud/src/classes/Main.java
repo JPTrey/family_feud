@@ -9,7 +9,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
@@ -22,79 +24,60 @@ import obj.Team;
 public class Main {
 
 	/* Global Variables */
-	public static final boolean		DEBUG = true;			// true: debug methods and statements will be shown
-	public static final boolean		SPLIT_SCREEN = true;	// true: builds admin frame
-	public static final int 		DEBUG_WAIT = 50;		// used for debug output; controls rate of String output (in milliseconds)
-	public static final int			CHAR_WAIT = 0;			// used for text output; controls rate of character output (in milliseconds)
-	public static final int			TEXT_WAIT = 0;			// used for text output; controls pause time when reading '~'
-	public static final int			TEAM_COUNT = 2;
-	public static final int			MAX_ANSWERS = 10;
-	public static final int			MAX_TEAMS = 2;
-	public static final int			MAX_TEAM_SIZE = 10;
-	public static final int			MAX_STRIKES = 3;
-	public static final int			POINTS_TO_WIN = 300;
-	public static final long		DRAMATIC_PAUSE = 1000;	// in milliseconds
-	public static final String		ADMIN_TITLE = "Administrator";
-	public static final String		PLAY_TITLE = "Family Feud";
-	public static boolean			ALT_EVERY_TURN = false;	// true: team mate switched after every answer 
-	public static File				QUESTION_FILE = new File("dogs.txt");
-	private static Dimension		MENU_DIM = new Dimension(800,600);
-	private static Dimension		PLAY_DIM = new Dimension(1024,768);
-	private static Dimension		ADMIN_DIM = new Dimension(480,300);
+	public static boolean		DEBUG = true;			// true: debug methods and statements will be shown
+	public static int 			DEBUG_WAIT = 50;		// used for debug output; controls rate of String output (in milliseconds)
+	public static int			CHAR_WAIT = 0;			// used for text output; controls rate of character output (in milliseconds)
+	public static int			TEXT_WAIT = 0;			// used for text output; controls pause time when reading '~'
+	public static int			TEAM_COUNT = 2;
+	public static int			MAX_ANSWERS = 10;
+	public static int			MAX_TEAMS = 2;
+	public static int			MAX_TEAM_SIZE = 10;
+	public static int			MAX_STRIKES = 3;
+	public static int			POINTS_TO_WIN = 300;
+	public static long			DRAMATIC_PAUSE = 1000;	// in milliseconds
+	public static String		ADMIN_TITLE = "Administrator";
+	public static String		PLAY_TITLE = "Family Feud";
+	public static boolean		ALT_EVERY_TURN = false;	// true: team mate switched after every answer 
+	public static File			QUESTION_FILE = new File("dogs.txt");
+	public static Dimension		MENU_DIM = new Dimension(800,600);
+	public static Dimension		PLAY_DIM = new Dimension(1024,768);
+	public static Dimension		ADMIN_DIM = new Dimension(480,300);
+	public static ImageIcon		BACKGROUND_ICON_IMG = new ImageIcon("FamilyFeudBoard.jpg");
 
-	/* Setup Variable */
+	/* Private Variable */
 	private static QuestionPack 	qpack;						// collection of questions
 	private static Team[]			teams = new Team[MAX_TEAMS];
 	private static Question 		cur_question;				// current question sent by QuestionPack
 	private static int				cur_question_num;
 	private static int				cur_team, cur_player;		// slot indices for arrays
 	private static int				cur_turn;					// turn count
+	private static int 				cur_points;
 	private	static JFrame			title, menu;
-	private static AdminWindow		admin;
-	private static PlayWindow		play;
+	private static AdminWindow		aw;
+	private static PlayWindow		pw;
 	private static JMenuBar			menubar;
 	private static Scanner			sc = new Scanner(System.in);
 
-	//TODO fix multiple windows bug
-	//TODO buzzer question
 	//TODO end after all questions
 	//TODO make pretty
-
+	//TODO absolute layout for components
+	//TODO startup interface
 	public static void main(String[] args) throws FileNotFoundException { 
-		if (DEBUG) { playGame(); }		// skip menu
-		else  { showMenu(); }
-	}
-
-	public static void playGame() {
-		try { loadQuestions(); } catch (FileNotFoundException e) { e.printStackTrace(); }
-
-		if (DEBUG) { 
-			Scanner sc = new Scanner(System.in);
-			showAllQuestions();
-			for (int i=0; i<MAX_TEAMS; i++) {			// placeholder teams
-				Text.out("\nTeam " + i + " name: ");
-				teams[i] = new Team(sc.nextLine());
-				Text.out("\nPlayer " + i + " name: ");
-				teams[i].addPlayer(new Player(sc.nextLine()));
-//				teams[i].addPlayer(new Player("Test Player " + (i+1)));
-//				teams[i].addPlayer(new Player("Test Player " + (i+2)));
-				Text.debug("Team " + (i+1) + ":Player " + (i+1));
-			}
+		if (DEBUG) { 	// skip menu
+			playGame(); 
+		}		
+		
+		else  { 
+			showMenu(); 
 		}
-		else { 
-			for (int i=0; i<MAX_TEAMS; i++) { addTeam(i); }
-		}
-		cur_player = 0;
-		nextQuestion(0);
-		while (qpack.hasNext()) { ; }	
 	}
 
 	/* Setup methods */
 
 	private static void showMenu() {
-		//		title = new JFrame();		// Splash screen
+		//		title = new JFrame();				// Splash screen
 		(new Thread(new MenuWindow())).start();		// Main Menu screen
-		menubar = new JMenuBar();	// Menubar displayed at all times
+		menubar = new JMenuBar();					// Menubar displayed at all times
 
 		//		menu.setVisible(false);
 		//		menubar.setVisible(false);
@@ -112,18 +95,26 @@ public class Main {
 	 * Creates a new PlayWindow for each new question
 	 */
 	private static void makePlayWindow() { 
-		if (play == null) { play = new PlayWindow(PLAY_TITLE, cur_question); }
-		else { play.setQuestion(cur_question); }
-
+		if (pw== null) { 
+			pw = new PlayWindow(PLAY_TITLE, cur_question); 
+		}
+		
+		else { 
+			pw.setQuestion(cur_question); 
+		}
 	}
 
 	/**
 	 * Creates a new AdminWindow for each new question
 	 */
 	private static void makeAdminWindow() { 
-		if (admin == null) { admin = new AdminWindow(ADMIN_TITLE + " - Question " + cur_question_num +
-				" of " + qpack.size(), cur_question, play); }
-		else { admin.setQuestion(cur_question); }
+		if (aw== null) { 
+			aw= new AdminWindow(ADMIN_TITLE + " - Question " + cur_question_num +
+				" of " + qpack.size(), cur_question, pw); 
+		}
+		else { 
+			aw.setQuestion(cur_question);
+		}
 	}
 
 	private static void addTeam(int slot) {
@@ -150,10 +141,8 @@ public class Main {
 
 	}
 
-
-
 	/** 
-	 * Builds the selected QuestionPack from 'questions.txt', if found.
+	 * Builds the selected QuestionPack from 'questions.txt', if found.  
 	 * @param name selection by user
 	 * @throws FileNotFoundException
 	 * @throws InterruptedException 
@@ -167,7 +156,10 @@ public class Main {
 		int					aPoints;
 		boolean				foundPack = false;
 
-		if (DEBUG) { packname = "dogs"; }
+		if (DEBUG) { 
+			packname = "dogs"; 
+		}
+		
 		else {
 			Text.out("Question Pack name: ");
 			packname = (new Scanner(System.in)).nextLine();
@@ -225,50 +217,79 @@ public class Main {
 
 	/* END Setup methods */
 
-	private static void showAllQuestions() { qpack.showAllEntries(); }
-
-	public static void addPoints(int points) {
-		teams[cur_team].addPoints(points);
-		if (teams[cur_team].getPoints() >= POINTS_TO_WIN) {
-			declareWinner(cur_team);
+		public static void playGame() {
+		try { 
+			loadQuestions(); 
+		} catch (FileNotFoundException e) { 
+			e.printStackTrace(); 
 		}
 
+		if (DEBUG) { 		// cmd team input
+			Scanner sc = new Scanner(System.in);
+			showAllQuestions();
+			for (int i=0; i<MAX_TEAMS; i++) {			// placeholder teams
+				Text.out("\nTeam " + i + " name: ");
+				teams[i] = new Team(sc.nextLine());
+				Text.out("\nPlayer " + i + " name: ");
+				Text.debug("Team " + (i+1) + ":Player " + (i+1));
+			}
+		}
+		
+		else { 
+			for (int i=0; i<MAX_TEAMS; i++) { 
+				addTeam(i); 
+			}
+		}
+		cur_player = 0;
+		nextQuestion();
+		while (qpack.hasNext()) { ; }	
 	}
 
-	private static void declareWinner(int cur_team2) {
+	private static void showAllQuestions() { 
+		qpack.showAllEntries(); 
+	}
+
+	/**
+	 * Adds points to question jackpot.
+	 */
+	public static void addPoints(int points) {
+		cur_points += points;
+		Text.debug(Integer.toString(cur_points));
+		pw.setPoints(cur_points);
+	}
+
+	public static void awardPoints(int points) {
+		teams[cur_team].addPoints(points);
+		if (teams[cur_team].getPoints() >= POINTS_TO_WIN) {
+			declareWinner();
+		}
+	}
+
+	private static void declareWinner() {
 		JPanel winnerPanel = new JPanel();
-		winnerPanel.setSize(play.getSize());
+		winnerPanel.add(new JLabel(teams[cur_team].getName()));
+		
+		winnerPanel.setSize(pw.getSize());
 		winnerPanel.setVisible(true);
-		play.add(winnerPanel);
+		pw.add(winnerPanel);
 
 	}
 
 	/**
-	 * Called after all answers have been revealed
-	 * Gets new question, at random, from QuestionPack
-	 * Sets up a new AdminWindow, if enabled
+	 * Called after all answers have been revealed.  
+	 * Gets new question, at random, from QuestionPack.  
+	 * Sets up a new AdminWindow, if enabled.
 	 */
-	public static void nextQuestion(int points) {
-		teams[cur_team].addPoints(points);
+	public static void nextQuestion() {
 		cur_question_num++;
-		if (qpack.size() == 0) { declareWinner(cur_team); }
+		if (qpack.size() == 0) { declareWinner(); }
 		else { 
 			cur_question = qpack.getQuestion();
 			Text.out(cur_question.getText() + "\n");
 			makePlayWindow();
-			if (SPLIT_SCREEN) { makeAdminWindow(); }
+		 	makeAdminWindow();
 		}
 	}
-
-	/** 
-	 * Called after each answer
-	 * TODO end play after all questions are answered
-	 */
-	//	private static void nextTurn() {
-	//		cur_turn++;
-	////		if (cur_question == null || cur_question.answerCount() == 0) { nextQuestion(); }		// if: question is finished
-	//		playerTurn();
-	//	}
 
 	/**
 	 * Called when the current player receives a strike; every turn is ALT_EVERY_TURN == true
@@ -278,24 +299,18 @@ public class Main {
 		Text.debug("cur_player = " + cur_player);
 		if (cur_player == teams[cur_team].size()) { cur_player = 0; }		
 		//		teams[cur_team].nextPlayer(cur_player);
-		play.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+		pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 	}
-
-	//	private static void playerTurn() {
-	//		String			answer;
-	//
-	//		//		if (cur_question.markAnswer(answer)) {
-	//		//			teams[cur_team].addStrike();
-	//		//			nextPlayer();
-	//		//		}
-	//		//		else if (ALT_EVERY_TURN) { nextPlayer(); }
-	//	}
 
 	public static void addStrike() {
 		teams[cur_team].addStrike();
-		if (teams[cur_team].checkStrikes()) { switchTeams(); }									// if: team has too many strikes
+		if (teams[cur_team].checkStrikes()) { 	// if: team has too many strikes
+			switchTeams(); 
+		}									
+		
 		nextPlayer();
-		//		play.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+		pw.setStrikes();
+		pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 	}
 
 	/**
@@ -303,11 +318,35 @@ public class Main {
 	 */
 	private static void switchTeams() {
 		cur_team++;
-		if (cur_team == MAX_TEAMS) { cur_team = 0; }
-		play.switchTeamLabel();
+		if (cur_team == MAX_TEAMS) { 
+			cur_team = 0; 
+		}
+		
+		pw.switchTeamLabel();
 	}
 
-	public static void EXIT() { System.exit(0); };
+	/* 
+	 * Button Actions
+	 */
+	
+	public static void setTeamButtonAction(int cur_team) {
+		setCUR_TEAM(cur_team);
+		pw.switchTeamLabel(); 
+		pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
+	}
+	
+	public static void revealAnswer(Answer ans) {
+		pw.revealAnswer(ans);
+		addPoints(ans.getPoints());
+	}
+	
+//	public static void revealAnswer(Answer ans, int slot) {
+//		pw.revealAnswer(ans.getText(), slot);
+//	}
+	
+	public static void EXIT() { 
+		System.exit(0); 
+	}
 
 	/* Setter and Getter methods */
 	public static boolean isDEBUG() { return DEBUG; }
