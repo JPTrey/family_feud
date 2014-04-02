@@ -34,7 +34,12 @@ public class LoadQuestionPackWindow extends javax.swing.JFrame {
 
         jFileChooser1.setApproveButtonText("");
         jFileChooser1.setApproveButtonToolTipText("");
-        jFileChooser1.setDialogTitle("Select a Question Pack");
+        jFileChooser1.setDialogTitle("\"Select a Question Pack\"");
+        jFileChooser1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFileChooser1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -55,6 +60,10 @@ public class LoadQuestionPackWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jFileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFileChooser1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFileChooser1ActionPerformed
 
     /**
      * @param args the command line arguments

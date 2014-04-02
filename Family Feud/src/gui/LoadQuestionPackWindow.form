@@ -45,8 +45,11 @@
       <Properties>
         <Property name="approveButtonText" type="java.lang.String" value=""/>
         <Property name="approveButtonToolTipText" type="java.lang.String" value=""/>
-        <Property name="dialogTitle" type="java.lang.String" value="Select a Question Pack"/>
+        <Property name="dialogTitle" type="java.lang.String" value="&quot;Select a Question Pack&quot;"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jFileChooser1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

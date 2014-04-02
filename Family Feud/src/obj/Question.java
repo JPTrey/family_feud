@@ -46,4 +46,8 @@ public class Question {
 
 	public int answerCount() { return answers.size(); }
 	public ArrayList<Answer> getAnswers() { return answers; }
+	@Override
+	public String toString() {
+		return text;
+	}
 }

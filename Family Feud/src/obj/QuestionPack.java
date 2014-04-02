@@ -20,15 +20,21 @@ public class QuestionPack {
 		return name;
 	}
 	
-	public Question getQuestion() {
-		Question		q;
-		int				rand;
+	public Question getQuestion(int selection) {
+		Question		q = questions.get(selection);
+//		int				rand;
+//		
+//		rand = (new Random().nextInt(questions.size()));
+//		q = questions.get(rand);
+//		questions.remove(rand);
+//		Text.debug("Question #" + q + " selected");
 		
-		rand = (new Random().nextInt(questions.size()));
-		q = questions.get(rand);
-		questions.remove(rand);
-		Text.debug("Question #" + q + " selected");
+		
 		return q;
+	}
+	
+	public Object[] getQuestions() {
+		return questions.toArray();
 	}
 
 	/**

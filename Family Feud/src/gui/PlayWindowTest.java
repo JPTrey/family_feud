@@ -54,6 +54,7 @@ public class PlayWindowTest extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         questionPanel = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
         pointsPanel = new javax.swing.JPanel();
         pointsLabel = new javax.swing.JLabel();
         teamPanel = new javax.swing.JPanel();
@@ -66,7 +67,8 @@ public class PlayWindowTest extends javax.swing.JFrame {
         strikesPanel = new javax.swing.JPanel();
         strikesLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 153, 255));
         setMinimumSize(new java.awt.Dimension(1024, 768));
         setName("main_frame"); // NOI18N
         setPreferredSize(new java.awt.Dimension(1024, 768));
@@ -123,7 +125,7 @@ public class PlayWindowTest extends javax.swing.JFrame {
         ansPanelLayout.setHorizontalGroup(
             ansPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ansPanelLayout.createSequentialGroup()
-                .addGap(180, 180, 180)
+                .addContainerGap()
                 .addGroup(ansPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(ansPanelLayout.createSequentialGroup()
                         .addComponent(jLabel15)
@@ -146,7 +148,7 @@ public class PlayWindowTest extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(seperator, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(seperator, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(ansPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(ansPanelLayout.createSequentialGroup()
@@ -221,42 +223,40 @@ public class PlayWindowTest extends javax.swing.JFrame {
                         .addGap(67, 67, 67))))
         );
 
+        jLabel21.setFont(new java.awt.Font("Marlett", 2, 18)); // NOI18N
+        jLabel21.setText("\"Question Text\"");
+
         javax.swing.GroupLayout questionPanelLayout = new javax.swing.GroupLayout(questionPanel);
         questionPanel.setLayout(questionPanelLayout);
         questionPanelLayout.setHorizontalGroup(
             questionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
+            .addGroup(questionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel21)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         questionPanelLayout.setVerticalGroup(
             questionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 52, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, questionPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel21)
+                .addContainerGap())
         );
 
+        pointsLabel.setFont(new java.awt.Font("Abadi MT Condensed Extra Bold", 1, 48)); // NOI18N
+        pointsLabel.setForeground(new java.awt.Color(255, 255, 255));
         pointsLabel.setText("35");
 
-        javax.swing.GroupLayout pointsPanelLayout = new javax.swing.GroupLayout(pointsPanel);
-        pointsPanel.setLayout(pointsPanelLayout);
-        pointsPanelLayout.setHorizontalGroup(
-            pointsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pointsPanelLayout.createSequentialGroup()
-                .addContainerGap(84, Short.MAX_VALUE)
-                .addComponent(pointsLabel)
-                .addGap(34, 34, 34))
-        );
-        pointsPanelLayout.setVerticalGroup(
-            pointsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pointsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pointsLabel)
-                .addContainerGap(78, Short.MAX_VALUE))
-        );
-
+        teamLabel1.setFont(new java.awt.Font("MT Extra", 0, 18)); // NOI18N
         teamLabel1.setText("team1");
 
+        teamLabel2.setFont(new java.awt.Font("MT Extra", 0, 18)); // NOI18N
         teamLabel2.setText("team2");
 
+        teamPoints1.setFont(new java.awt.Font("MT Extra", 0, 18)); // NOI18N
         teamPoints1.setText("0");
 
+        teamPoints2.setFont(new java.awt.Font("MT Extra", 0, 18)); // NOI18N
         teamPoints2.setText("0");
 
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -295,21 +295,44 @@ public class PlayWindowTest extends javax.swing.JFrame {
         teamPanelLayout.setVerticalGroup(
             teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(teamPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
                 .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(teamLabel1)
                         .addComponent(teamPoints1))
                     .addComponent(jCheckBox1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(teamLabel2)
                         .addComponent(teamPoints2))
                     .addComponent(jCheckBox2))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout pointsPanelLayout = new javax.swing.GroupLayout(pointsPanel);
+        pointsPanel.setLayout(pointsPanelLayout);
+        pointsPanelLayout.setHorizontalGroup(
+            pointsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pointsPanelLayout.createSequentialGroup()
+                .addContainerGap(34, Short.MAX_VALUE)
+                .addComponent(pointsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(teamPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        pointsPanelLayout.setVerticalGroup(
+            pointsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pointsPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(pointsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(teamPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pointsLabel))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        strikesLabel.setFont(new java.awt.Font("Abadi MT Condensed Extra Bold", 0, 48)); // NOI18N
+        strikesLabel.setForeground(new java.awt.Color(255, 0, 51));
         strikesLabel.setText("XX");
 
         javax.swing.GroupLayout strikesPanelLayout = new javax.swing.GroupLayout(strikesPanel);
@@ -337,14 +360,13 @@ public class PlayWindowTest extends javax.swing.JFrame {
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addComponent(strikesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pointsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(129, 129, 129)
-                        .addComponent(teamPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(ansPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addGap(187, 187, 187)
+                .addGap(153, 153, 153)
                 .addComponent(questionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -353,9 +375,8 @@ public class PlayWindowTest extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pointsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(teamPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(strikesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(strikesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pointsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(questionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -365,7 +386,6 @@ public class PlayWindowTest extends javax.swing.JFrame {
         jLayeredPane1.setLayer(ansPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(questionPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(pointsPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(teamPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(strikesPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -376,7 +396,7 @@ public class PlayWindowTest extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1)
+            .addComponent(jLayeredPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         bindingGroup.bind();
@@ -444,6 +464,7 @@ public class PlayWindowTest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

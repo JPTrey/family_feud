@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.GridLayout;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,31 +22,43 @@ import classes.Main;
  */
 public class AdminWindow extends JFrame {
 	// private int					buttonCount, totalPoints;
-//	private int					current_question_answers;		// used for removing 
+	//	private int					current_question_answers;		// used for removing 
+	private AdminFrame 			frame;
 	private JLabel				ansLabel, teamLabel;
 	private JPanel				mainPanel, ansPanel, controlPanel;
 	private JButton				strikeButton, revealAllButton, nextQuestButton, setTeam1Button, setTeam2Button, endGameButton;
 	private ArrayList<AnswerButton> ansButtons;
-	// private AnswerButton		a1, a2, a3, a4, a5, a6, a7, a8, a9, a10;
+	private AnswerButton		a1, a2, a3, a4, a5, a6, a7, a8, a9, a10;
 	private Question			q;			// question currently associated with this window, and PlayWindow
 	private PlayWindow			pw;			// PlayWindow associated with this AdminWindow
-
-	public AdminWindow(String title, Question q, PlayWindow pw) {
-		setTitle(title);
-		this.q = q;
-		this.pw = pw;
-//		ansButtons = new ArrayList<AnswerButton>();	
-		// totalPoints = 0;
-
-		mainPanel = new JPanel(new GridLayout(2,1,5,0));
-		setQuestion(q);
-		//		setupControlPanel();
-		mainPanel.add(ansPanel);
-		mainPanel.add(controlPanel);
-		add(mainPanel);
-
-		setVisible(true);
-		setSize(Main.getADMIN_DIM());
+	
+	public AdminWindow(String title, final Question q, PlayWindow pw) {
+		//		setTitle(title);
+				this.q = q;
+				this.pw = pw;
+		////		ansButtons = new ArrayList<AnswerButton>();	
+		//		// totalPoints = 0;
+		//
+		//		mainPanel = new JPanel(new GridLayout(2,1,5,0));
+		//		setQuestion(q);
+		//		//		setupControlPanel();
+		//		mainPanel.add(ansPanel);
+		//		mainPanel.add(controlPanel);
+		//		add(mainPanel);
+		//
+		//		setVisible(true);
+		//		setSize(Main.getADMIN_DIM());
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frame = new AdminFrame();
+					frame.setVisible(true);
+					frame.registerQuestion(q);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	/**
@@ -56,39 +68,39 @@ public class AdminWindow extends JFrame {
 	 */
 	public void setQuestion(Question q) {
 		//		questPanel = new JPanel();
-//		current_question_answers;
-		
+		//		current_question_answers;
+
 		if (ansPanel == null) { 
 			ansPanel = new JPanel(); 
 		}
 
-		
-//		else {
-////			for (int i=0; i<ansButtons.size(); i++) {
-////				ansButtons.get(i).setVisible(false);
-////			}
-//		}
-		
-		ansButtons = new ArrayList<AnswerButton>();
 
-		for (int i=1; i<=q.answerCount(); i++) {
-			ansButtons.add(i-1, new AnswerButton(q.getAnswers().get(q.answerCount()-i),i-1,this));
-			ansPanel.add(ansButtons.get(i-1));
-		} 
+		//		else {
+		////			for (int i=0; i<ansButtons.size(); i++) {
+		////				ansButtons.get(i).setVisible(false);
+		////			}
+		//		}
 
-		// switch (q.answerCount()) {				// assign a button for each answer
-		// case 10: 	a10 = new AnswerButton(q.getAnswers().get(9),this); ansPanel.add(a10);
-		// case 9:		a9 = new AnswerButton(q.getAnswers().get(8),this); ansPanel.add(a9);
-		// case 8:		a8 = new AnswerButton(q.getAnswers().get(7),this); ansPanel.add(a8);
-		// case 7: 	a7 = new AnswerButton(q.getAnswers().get(6),this); ansPanel.add(a7);
-		// case 6:		a6 = new AnswerButton(q.getAnswers().get(5),this); ansPanel.add(a6);
-		// case 5:		a5 = new AnswerButton(q.getAnswers().get(4),this); ansPanel.add(a5);
-		// case 4:		a4 = new AnswerButton(q.getAnswers().get(3),this); ansPanel.add(a4);
-		// case 3:		a3 = new AnswerButton(q.getAnswers().get(2),this); ansPanel.add(a3);
-		// case 2:		a2 = new AnswerButton(q.getAnswers().get(1),this); ansPanel.add(a2);
-		// case 1:		a1 = new AnswerButton(q.getAnswers().get(0),this); ansPanel.add(a1); break;
-		// default: 	Text.debug("Answers not found!"); break;
-		// }
+//		ansButtons = new ArrayList<AnswerButton>();
+//
+//		for (int i=1; i<=q.answerCount(); i++) {
+//			ansButtons.add(i-1, new AnswerButton(q.getAnswers().get(q.answerCount()-i),i-1,this));
+//			ansPanel.add(ansButtons.get(i-1));
+//		} 
+
+//		 switch (q.answerCount()) {				// assign a button for each answer
+//		 case 10: 	a10 = new AnswerButton(q.getAnswers().get(9),this); ansPanel.add(a10);
+//		 case 9:		a9 = new AnswerButton(q.getAnswers().get(8),this); ansPanel.add(a9);
+//		 case 8:		a8 = new AnswerButton(q.getAnswers().get(7),this); ansPanel.add(a8);
+//		 case 7: 	a7 = new AnswerButton(q.getAnswers().get(6),this); ansPanel.add(a7);
+//		 case 6:		a6 = new AnswerButton(q.getAnswers().get(5),this); ansPanel.add(a6);
+//		 case 5:		a5 = new AnswerButton(q.getAnswers().get(4),this); ansPanel.add(a5);
+//		 case 4:		a4 = new AnswerButton(q.getAnswers().get(3),this); ansPanel.add(a4);
+//		 case 3:		a3 = new AnswerButton(q.getAnswers().get(2),this); ansPanel.add(a3);
+//		 case 2:		a2 = new AnswerButton(q.getAnswers().get(1),this); ansPanel.add(a2);
+//		 case 1:		a1 = new AnswerButton(q.getAnswers().get(0),this); ansPanel.add(a1); break;
+//		 default: 	Text.debug("Answers not found!"); break;
+//		 }
 
 		//		questPanel.add(questLabel);
 		//		questPanel.setSize(Main.getADMIN_DIM().width, Main.getADMIN_DIM().height/2);
@@ -118,7 +130,7 @@ public class AdminWindow extends JFrame {
 					revealAllButton.setVisible(false);
 				}
 			});
-			
+
 			nextQuestButton = new JButton("Next Question");
 			nextQuestButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ae) { 
@@ -135,7 +147,7 @@ public class AdminWindow extends JFrame {
 					setTeam2Button.setVisible(false);
 				}
 			});
-			
+
 			setTeam2Button = new JButton("Team '" + Main.getTEAM_NAME(1) + "'");
 			setTeam2Button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ae) { 
@@ -172,15 +184,15 @@ public class AdminWindow extends JFrame {
 	}
 
 	// TODO: allow PW to enable visibility
-//	public void setQuestButtonVisible() { 
-//		nextQuestButton.setVisible(true); 
-//	}
+	//	public void setQuestButtonVisible() { 
+	//		nextQuestButton.setVisible(true); 
+	//	}
 
 	private void switchTeamLabel() {
 		if (teamLabel == null) { 
 			teamLabel = new JLabel(Main.getCUR_TEAM().getName()); 
 		}
-		
+
 		teamLabel.setText(Main.getCUR_TEAM().getName() + " controls");
 	}
 
@@ -195,7 +207,7 @@ public class AdminWindow extends JFrame {
 	 * @param ans answer to be revealed, per button press
 	 */
 	public void revealAnswer(Answer ans, int slot) {
-//		Main.revealAnswer(ans, slot); 
+		//		Main.revealAnswer(ans, slot); 
 		Main.revealAnswer(ans);
 
 		for (int i=0; i<ansButtons.size(); i++) {
@@ -218,7 +230,7 @@ public class AdminWindow extends JFrame {
 		// else if (ans.getText().equalsIgnoreCase(a10.getAnswerText())) { a10.setVisible(false); }
 		// else { Text.debug("Button for '" + ans.getText() + "' not found"); }
 
-//		Main.addPoints(ans.getPoints());
+		//		Main.addPoints(ans.getPoints());
 		// totalPoints += ans.getPoints();
 		// buttonCount--;
 		// if (buttonCount == 0) { nextQuestButton.setVisible(true); }
@@ -227,7 +239,7 @@ public class AdminWindow extends JFrame {
 	private void revealAll() {
 
 		for (int i=0; i<ansButtons.size(); i++) {
-//			Main.revealAnswer(ansButtons.get(i).getAnswer(), ansButtons.get(i).getSlot());
+			//			Main.revealAnswer(ansButtons.get(i).getAnswer(), ansButtons.get(i).getSlot());
 			Main.revealAnswer(ansButtons.get(i).getAnswer());
 			ansButtons.get(i).setVisible(false);
 		}

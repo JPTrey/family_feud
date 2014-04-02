@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -25,6 +26,7 @@ import classes.Text;
  * @author Jon Paul
  */
 public class PlayWindow extends JFrame {
+	private static PlayFrame 	frame;
 	private Question			q;			// this window's question
 	private JPanel				mainPanel, backgroundPanel, textPanel, numPanel, questPanel, ansPanel, strikePanel, pointsPanel, teamPanel, showStrikes;
 	private JLabel				background, questLabel, strikeLabel, pointsLabel, teamLabel, playerLabel,
@@ -32,38 +34,48 @@ public class PlayWindow extends JFrame {
 	private ArrayList<JLabel>  	ansLabels;
 	private int					totalPoints, ansRemain;
 
-	public PlayWindow(String title, Question q) {
-		setTitle(title);
-		this.q = q;
-		ansRemain = q.answerCount();
-//		ansLabels = new ArrayList<JLabel>();
-
-		mainPanel = new JPanel(new BorderLayout());
-		textPanel = new JPanel(new GridLayout(2,1,25,0));
-		numPanel = new JPanel(new GridLayout(4,1,6,0));
-		setQuestion(q);
-
-		backgroundPanel = new JPanel();
-		backgroundPanel.setSize(this.getSize());
-		background = new JLabel(Main.BACKGROUND_ICON_IMG);
-		background.setSize(this.getSize());
-		backgroundPanel.add(background);
-//		add(backgroundPanel);
-
-
-		numPanel.add(setupPointsPanel(),BorderLayout.EAST);
-		numPanel.add(setupTeamPanel(),BorderLayout.WEST);
-		numPanel.add(setupStrikePanel(),BorderLayout.CENTER);
-
-		mainPanel.setBackground(new Color(12345));
-		mainPanel.add(textPanel,BorderLayout.CENTER);
-		mainPanel.add(numPanel,BorderLayout.EAST);
-//		add(mainPanel);
-
-		this.setContentPane(wrapInBackgroundImage(mainPanel, Main.BACKGROUND_ICON_IMG));
-		
-		setSize(Main.getPLAY_DIM());
-		setVisible(true);
+	public PlayWindow(String title, final Question q) {
+//		setTitle(title);
+//		this.q = q;
+//		ansRemain = q.answerCount();
+////		ansLabels = new ArrayList<JLabel>();
+//
+//		mainPanel = new JPanel(new BorderLayout());
+//		textPanel = new JPanel(new GridLayout(2,1,25,0));
+//		numPanel = new JPanel(new GridLayout(4,1,6,0));
+//		setQuestion(q);
+//
+//		backgroundPanel = new JPanel();
+//		backgroundPanel.setSize(this.getSize());
+//		background = new JLabel(Main.BACKGROUND_ICON_IMG);
+//		background.setSize(this.getSize());
+//		backgroundPanel.add(background);
+////		add(backgroundPanel);
+//
+//
+//		numPanel.add(setupPointsPanel(),BorderLayout.EAST);
+//		numPanel.add(setupTeamPanel(),BorderLayout.WEST);
+//		numPanel.add(setupStrikePanel(),BorderLayout.CENTER);
+//
+//		mainPanel.setBackground(new Color(12345));
+//		mainPanel.add(textPanel,BorderLayout.CENTER);
+//		mainPanel.add(numPanel,BorderLayout.EAST);
+////		add(mainPanel);
+//
+//		this.setContentPane(wrapInBackgroundImage(mainPanel, Main.BACKGROUND_ICON_IMG));
+//		
+//		setSize(Main.getPLAY_DIM());
+//		setVisible(true);
+    	EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frame = new PlayFrame(q);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	/**
@@ -71,41 +83,43 @@ public class PlayWindow extends JFrame {
 	 * Called by Main.makePlayWindow
 	 */
 	public void setQuestion(Question q) {
-		//		int i = 0;		// enables proper order of answer labels
-		ansLabels = new ArrayList<JLabel>();
-
-		if (ansPanel == null) { 
-			ansPanel = new JPanel(new GridLayout(5,2,10,50)); 
-		}
-//		else { 
-//			removeAnswers(); 
-//		}
-
-		this.q = q;
-
-		questPanel = setupQuestPanel();
-		textPanel.add(questPanel);
-		//		if (ansPanel == null) { 
-
-		ansPanel.setVisible(true);
-		textPanel.add(ansPanel);
-		//		}
-
-		//		else { textPanel.remove(ansPanel); }
-
-		for (int i=0; i<10; i++) {
-			JLabel placeholder = new JLabel("blue.jpg");
-			placeholder.setVisible(true);
-			ansLabels.add(i, placeholder);		// placeholder label			
-		}
 		
-		for (int i=0; i<q.answerCount(); i++) {
-			JLabel newAns = new JLabel(q.getAnswers().get(i).getBoth());
-			newAns.setVisible(false);
-			ansLabels.remove(i); 
-			ansLabels.add(i, newAns); 
-			ansPanel.add(ansLabels.get(i));
-		}
+		frame.reg
+		//		int i = 0;		// enables proper order of answer labels
+//		ansLabels = new ArrayList<JLabel>();
+//
+//		if (ansPanel == null) { 
+//			ansPanel = new JPanel(new GridLayout(5,2,10,50)); 
+//		}
+////		else { 
+////			removeAnswers(); 
+////		}
+//
+//		this.q = q;
+//
+//		questPanel = setupQuestPanel();
+//		textPanel.add(questPanel);
+//		//		if (ansPanel == null) { 
+//
+//		ansPanel.setVisible(true);
+//		textPanel.add(ansPanel);
+//		//		}
+//
+//		//		else { textPanel.remove(ansPanel); }
+//
+//		for (int i=0; i<10; i++) {
+//			JLabel placeholder = new JLabel("blue.jpg");
+//			placeholder.setVisible(true);
+//			ansLabels.add(i, placeholder);		// placeholder label			
+//		}
+//		
+//		for (int i=0; i<q.answerCount(); i++) {
+//			JLabel newAns = new JLabel(q.getAnswers().get(i).getBoth());
+//			newAns.setVisible(false);
+//			ansLabels.remove(i); 
+//			ansLabels.add(i, newAns); 
+//			ansPanel.add(ansLabels.get(i));
+//		}
 
 		// switch (q.answerCount()) {				// assign a JLabel for each answer
 		// case 10: 	
@@ -219,8 +233,8 @@ public class PlayWindow extends JFrame {
 		//		default: 	Text.debug("Answers not found!"); break;
 
 
-		setupQuestPanel();
-		setupPointsPanel();
+//		setupQuestPanel();
+//		setupPointsPanel();
 	}
 
 	private JPanel setupQuestPanel() {
@@ -272,6 +286,7 @@ public class PlayWindow extends JFrame {
 	 * Called when either:
 	 * An answer was found in the dictionary or;
 	 * An answer was selected in AdminWindow
+	 * @param slot 
 	 * @param ans answer selected for reveal
 	 */
 	
@@ -282,15 +297,17 @@ public class PlayWindow extends JFrame {
 ////		ansLabels.set(slot, new JLabel(ansText));
 //		ansLabels.get(slot).setVisible(true);;
 //	}
-	public void revealAnswer(Answer ans) {	
+	public void revealAnswer(String ansText, int slot) {	
+		
+		frame.revealAnswer(ansText, slot);
 		//		try { Thread.sleep(Main.DRAMATIC_PAUSE); } catch (InterruptedException e) { e.printStackTrace();} // pause for dramatic effect
 
-		for (int i=0; i<ansLabels.size(); i++) {
-			if (ans.getBoth().equalsIgnoreCase(ansLabels.get(i).getText())) {
-				ansLabels.get(i).setVisible(true); 
-				break;
-			}
-		}
+//		for (int i=0; i<ansLabels.size(); i++) {
+//			if (ansText.equalsIgnoreCase(ansLabels.get(i).getText())) {
+//				ansLabels.get(i).setVisible(true); 
+//				break;
+//			}
+//		}
 //
 //		// if 		(ans.getBoth().equalsIgnoreCase(a1.getText())) { a1.setVisible(true); }
 //		// else if (ans.getBoth().equalsIgnoreCase(a2.getText())) { a2.setVisible(true); }	
@@ -304,7 +321,7 @@ public class PlayWindow extends JFrame {
 //		// else if (ans.getBoth().equalsIgnoreCase(a10.getText())) { a10.setVisible(true); }
 //		// else { Text.debug("Button for '" + ans.getText() + "' not found"); }
 //		setPoints(ans.getPoints());
-		Text.debug("'" + ans.getText() + "' revealed in PlayWindow for " + ans.getPoints() + " points" );
+//		Text.debug("'" + ans.getText() + "' revealed in PlayWindow for " + ans.getPoints() + " points" );
 	}
 
 	/**
@@ -344,30 +361,34 @@ public class PlayWindow extends JFrame {
 	}
 
 	public void setPoints(int cur_points) { 
-		pointsLabel.setText("Points: " + Integer.toString(cur_points));
+//		pointsLabel.setText("Points: " + Integer.toString(cur_points));
+		frame.setPoints(cur_points);
 	}
 
-	public void setStrikes() { 
+	public void setStrikes(int strikeCount) { 
+		frame.setStrikes(strikeCount);
+		
 		//		try { Thread.sleep(Main.DRAMATIC_PAUSE); } catch (InterruptedException e) { e.printStackTrace(); } // pause for dramatic effect
-		if (showStrikes == null) {
-			showStrikes = new JPanel();
-			showStrikes.setSize(Main.getPLAY_DIM());
-		}
-		mainPanel.setVisible(false);
-
-		switch(Main.getCUR_TEAM().getStrikeCount()) {		// display 'X'
-		case 1: add(showStrikes.add(new JLabel("X"))); Text.debug("Strike 1"); break;
-		case 2: add(showStrikes.add(new JLabel("XX"))); break;
-		case 3: add(showStrikes.add(new JLabel("XXX"))); break;
-		default: break;
-		}
-
-		//		try { Thread.sleep(Main.DRAMATIC_PAUSE); } catch (InterruptedException e) { e.printStackTrace(); } // pause for dramatic effect
-		strikeLabel.setText("Strikes: " + Integer.toString(Main.getCUR_TEAM().getStrikeCount())); 
-		mainPanel.setVisible(true);
+//		if (showStrikes == null) {
+//			showStrikes = new JPanel();
+//			showStrikes.setSize(Main.getPLAY_DIM());
+//		}
+//		mainPanel.setVisible(false);
+//
+//		switch(Main.getCUR_TEAM().getStrikeCount()) {		// display 'X'
+//		case 1: add(showStrikes.add(new JLabel("X"))); Text.debug("Strike 1"); break;
+//		case 2: add(showStrikes.add(new JLabel("XX"))); break;
+//		case 3: add(showStrikes.add(new JLabel("XXX"))); break;
+//		default: break;
+//		}
+//
+//		//		try { Thread.sleep(Main.DRAMATIC_PAUSE); } catch (InterruptedException e) { e.printStackTrace(); } // pause for dramatic effect
+//		strikeLabel.setText("Strikes: " + Integer.toString(Main.getCUR_TEAM().getStrikeCount())); 
+//		mainPanel.setVisible(true);
 	}
 
-	public void switchTeamLabel() { teamLabel.setText("'" + Main.getCUR_TEAM().getName() + "' Controls"); }
+	public void switchTeamLabel() { frame.switchTeam(); }
+	public void setTeamLabel(int team) { frame.setTeamName("'" + Main.getCUR_TEAM().getName() + "' Controls", team); }
 	public void switchPlayerLabel(String s) { playerLabel.setText("'" + s + "'"); }
 	
   /*
