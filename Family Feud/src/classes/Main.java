@@ -3,7 +3,6 @@ package classes;
 import gui.AdminWindow;
 import gui.MenuFrame;
 import gui.PlayWindow;
-import gui.TeamWindow;
 import gui.loadQuestionFrame;
 
 import java.awt.Dimension;
