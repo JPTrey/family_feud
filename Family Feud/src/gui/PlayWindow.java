@@ -71,6 +71,8 @@ public class PlayWindow extends JFrame {
 				try {
 					frame = new PlayFrame(q);
 					frame.setVisible(true);
+					frame.setTeamName(Main.getTEAM_NAME(0), 1);
+					frame.setTeamName(Main.getTEAM_NAME(1), 2);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -84,7 +86,7 @@ public class PlayWindow extends JFrame {
 	 */
 	public void setQuestion(Question q) {
 		
-		frame.reg
+		frame.registerQuestion(q);
 		//		int i = 0;		// enables proper order of answer labels
 //		ansLabels = new ArrayList<JLabel>();
 //
@@ -236,7 +238,7 @@ public class PlayWindow extends JFrame {
 //		setupQuestPanel();
 //		setupPointsPanel();
 	}
-
+	
 	private JPanel setupQuestPanel() {
 		if (questPanel == null) {
 			questPanel = new JPanel();
@@ -388,7 +390,7 @@ public class PlayWindow extends JFrame {
 	}
 
 	public void switchTeamLabel() { frame.switchTeam(); }
-	public void setTeamLabel(int team) { frame.setTeamName("'" + Main.getCUR_TEAM().getName() + "' Controls", team); }
+	public void setTeamLabel(int team) { frame.setCurrentTeam(team); }
 	public void switchPlayerLabel(String s) { playerLabel.setText("'" + s + "'"); }
 	
   /*

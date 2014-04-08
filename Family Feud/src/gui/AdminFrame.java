@@ -18,16 +18,20 @@ import classes.Text;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+// TODO end game after all answers have been logged
+
 public class AdminFrame extends JFrame {
 
-	private static AdminFrame frame;
-	private JPanel contentPane;
-	private JLabel questLabel;
-	private JButton ansButton1, ansButton2, ansButton3, ansButton4, ansButton5, 
+	private static AdminFrame 	frame;
+	private JPanel				contentPane;
+	private JLabel 				questLabel, questCountLabel, teamLabel, strikesLabel;
+	private JButton 			ansButton1, ansButton2, ansButton3, ansButton4, ansButton5, 
 	ansButton6, ansButton7, ansButton8, ansButton9, ansButton10;
-	private int	ansButton1Pts, ansButton2Pts, ansButton3Pts, ansButton4Pts, ansButton5Pts, 
+	private int					cur_strikes, ansRemaining;
+	private int 				ansButton1Pts, ansButton2Pts, ansButton3Pts, ansButton4Pts, ansButton5Pts, 
 	ansButton6Pts, ansButton7Pts, ansButton8Pts, ansButton9Pts, ansButton10Pts; 
-	private JButton team2Button;
+	private JButton				strikeButton, revealAllButton, nextButton, team1Button, team2Button;
+	private JPanel countPanel;
 
 	/**
 	 * Launch the application.
@@ -60,19 +64,20 @@ public class AdminFrame extends JFrame {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		contentPane.add(infoPanel, BorderLayout.NORTH);
-		infoPanel.setLayout(new GridLayout(0, 2, 0, 0));
+		infoPanel.setLayout(new GridLayout(2, 2, 0, 0));
 
-		JLabel questCountLabel = new JLabel("New label");
-		infoPanel.add(questCountLabel);
+		countPanel = new JPanel();
+		infoPanel.add(countPanel);
+		countPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
-		JLabel ansCountLabel = new JLabel("New label");
-		infoPanel.add(ansCountLabel);
+		questCountLabel = new JLabel("Question x of n");
+		countPanel.add(questCountLabel);
 
-		JLabel teamLabel = new JLabel("New label");
-		infoPanel.add(teamLabel);
+		teamLabel = new JLabel("No Team Controls");
+		countPanel.add(teamLabel);
 
-		JLabel strikesLabel = new JLabel("Strikes: ");
-		infoPanel.add(strikesLabel);
+		strikesLabel = new JLabel("Strikes: ");
+		countPanel.add(strikesLabel);
 
 		questLabel = new JLabel("\"Question Text\"");
 		infoPanel.add(questLabel);
@@ -82,92 +87,110 @@ public class AdminFrame extends JFrame {
 		contentPane.add(ansPanel, BorderLayout.CENTER);
 		ansPanel.setLayout(new GridLayout(5, 2, 0, 0));
 
-		ansButton1 = new JButton("New button");
+		ansButton1 = new JButton();
 		ansButton1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton1.setEnabled(false);
 				Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton1.setVisible(false);
 
 		ansPanel.add(ansButton1);
 
-		ansButton6 = new JButton("New button");
+		ansButton6 = new JButton();
 		ansButton6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ansButton6.setEnabled(false);
 				Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton6.setVisible(false);
 		ansPanel.add(ansButton6);
 
-		ansButton2 = new JButton("New button");
+		ansButton2 = new JButton();
 		ansButton2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton2.setEnabled(false);
 				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton2.setVisible(false);
 		ansPanel.add(ansButton2);
 
-		ansButton7 = new JButton("New button");
+		ansButton7 = new JButton();
 		ansButton7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton7.setEnabled(false);
 				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton7.setVisible(false);
 		ansPanel.add(ansButton7);
 
-		ansButton3 = new JButton("New button");
+		ansButton3 = new JButton();
 		ansButton3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton3.setEnabled(false);
 				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton3.setVisible(false);
 		ansPanel.add(ansButton3);
 
-		ansButton8 = new JButton("New button");
+		ansButton8 = new JButton();
 		ansButton8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton8.setEnabled(false);
 				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton8.setVisible(false);
 		ansPanel.add(ansButton8);
 
-		ansButton4 = new JButton("New button");
+		ansButton4 = new JButton();
 		ansButton4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton4.setEnabled(false);
 				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton4.setVisible(false);
 		ansPanel.add(ansButton4);
 
-		ansButton9 = new JButton("New button");
+		ansButton9 = new JButton();
 		ansButton9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton9.setEnabled(false);
 				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton9.setVisible(false);
 		ansPanel.add(ansButton9);
 
-		ansButton5 = new JButton("New button");
+		ansButton5 = new JButton();
 		ansButton5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton5.setEnabled(false);
 				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton5.setVisible(false);
@@ -178,6 +201,8 @@ public class AdminFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton10.setEnabled(false);
 				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10);
+				ansRemaining--;
+				checkDone();
 			}
 		});
 		ansButton10.setVisible(false);
@@ -188,92 +213,190 @@ public class AdminFrame extends JFrame {
 		contentPane.add(cmdPanel, BorderLayout.EAST);
 		cmdPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JButton strikeButton = new JButton("Strike");
+		cur_strikes = 0;
+		strikeButton = new JButton("Strike");
 		strikeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				cur_strikes++;
+				if (cur_strikes == 3) {
+					cur_strikes = 0;
+				}
 				Main.addStrike();
+				setStrikesLabel();
 			}
 		});
 		cmdPanel.add(strikeButton);
 
-		JButton revealAllButton = new JButton("Reveal All");
+		revealAllButton = new JButton("Reveal All");
+		revealAllButton.setEnabled(false);
 		cmdPanel.add(revealAllButton);
 
-		JButton nextButton = new JButton("Next Question");
+		nextButton = new JButton("Next Question");
 		nextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Main.nextQuestion();
 			}
 		});
+		nextButton.setEnabled(false);
 		cmdPanel.add(nextButton);
 
-		JButton team1Button = new JButton("Team 1");
+		team1Button = new JButton(Main.getTEAM_NAME(0) + " Controls");
 		team1Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main.setCUR_TEAM(0);
+				teamLabel.setText(Main.getCUR_TEAM_NAME() + " Controls");
+				team1Button.setEnabled(false);
+				team2Button.setEnabled(false);
 			}
 		});
 		cmdPanel.add(team1Button);
-		
-		team2Button = new JButton("Team 2");
+
+		team2Button = new JButton(Main.getTEAM_NAME(1) + " Controls");
 		team2Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main.setCUR_TEAM(1);
+				teamLabel.setText(Main.getCUR_TEAM().getName());
+				setEnabled(false);
+				team2Button.setEnabled(false);
 			}
 		});
 		cmdPanel.add(team2Button);
 
 		JButton endButton = new JButton("End Game");
+		endButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Main.endGame();
+			}
+		});
 		cmdPanel.add(endButton);
 	}
 
-	public void registerQuestion(Question q) {
+	public void registerQuestion(final Question q) {
+		ansRemaining = q.answerCount();
 		questLabel.setText(q.getText());
 		
+		// reset variables
+		revealAllButton.setEnabled(true);
+		strikeButton.setEnabled(true);
+		nextButton.setEnabled(false);
+		ansButton1.setVisible(false);
+		ansButton2.setVisible(false);
+		ansButton3.setVisible(false);
+		ansButton4.setVisible(false);
+		ansButton5.setVisible(false);
+		ansButton6.setVisible(false);
+		ansButton7.setVisible(false);
+		ansButton8.setVisible(false);
+		ansButton9.setVisible(false);
+		ansButton10.setVisible(false);
+
 		switch (q.answerCount()) {				// assign a button for each answer
 		case 10:	ansButton10.setText(q.getAnswers().get(9).getBoth()); 
 		ansButton10Pts = q.getAnswers().get(9).getPoints(); 
+		ansButton10.setEnabled(true);
 		ansButton10.setVisible(true);
 		case 9:		ansButton9.setText(q.getAnswers().get(8).getBoth()); 
 		ansButton9Pts = q.getAnswers().get(8).getPoints(); 
+		ansButton9.setEnabled(true);
 		ansButton9.setVisible(true);
 		case 8:		ansButton8.setText(q.getAnswers().get(7).getBoth()); 
 		ansButton8Pts = q.getAnswers().get(7).getPoints(); 
+		ansButton8.setEnabled(true);
 		ansButton8.setVisible(true);
 		case 7: 	ansButton7.setText(q.getAnswers().get(6).getBoth()); 
 		ansButton7Pts = q.getAnswers().get(6).getPoints(); 
+		ansButton7.setEnabled(true);
 		ansButton7.setVisible(true);
 		case 6:		ansButton6.setText(q.getAnswers().get(5).getBoth()); 
 		ansButton6Pts = q.getAnswers().get(5).getPoints(); 
+		ansButton6.setEnabled(true);
 		ansButton6.setVisible(true);
 		case 5:		ansButton5.setText(q.getAnswers().get(4).getBoth()); 
 		ansButton5Pts = q.getAnswers().get(4).getPoints(); 
+		ansButton5.setEnabled(true);
 		ansButton5.setVisible(true);
 		case 4:		ansButton4.setText(q.getAnswers().get(3).getBoth()); 
 		ansButton4Pts = q.getAnswers().get(3).getPoints(); 
+		ansButton4.setEnabled(true);
 		ansButton4.setVisible(true);
 		case 3:		ansButton3.setText(q.getAnswers().get(2).getBoth()); 
 		ansButton3Pts = q.getAnswers().get(2).getPoints(); 
+		ansButton3.setEnabled(true);
 		ansButton3.setVisible(true);
 		case 2:		ansButton2.setText(q.getAnswers().get(1).getBoth()); 
 		ansButton2Pts = q.getAnswers().get(1).getPoints(); 
+		ansButton2.setEnabled(true);
 		ansButton2.setVisible(true);
 		case 1:		ansButton1.setText(q.getAnswers().get(0).getBoth()); 
 		ansButton1Pts = q.getAnswers().get(0).getPoints(); 
+		ansButton1.setEnabled(true);
 		ansButton1.setVisible(true);
 		break;
 		default: 	Text.debug("Answers not found!"); break;
 		}
+
+		// enabled revealAllButton
+		revealAllButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				switch (q.answerCount()) {				
+				case 10:	ansButton10.setEnabled(false);
+				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10);
+				case 9:		ansButton9.setEnabled(false);
+				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9);
+				case 8:		ansButton8.setEnabled(false);
+				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8);
+				case 7: 	ansButton7.setEnabled(false);
+				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7);
+				case 6:		ansButton6.setEnabled(false);
+				Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6);
+				case 5:		ansButton5.setEnabled(false);
+				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5);
+				case 4:		ansButton4.setEnabled(false);
+				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4);
+				case 3:		ansButton3.setEnabled(false);
+				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3);
+				case 2:		ansButton2.setEnabled(false);
+				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2);
+				case 1:		ansButton1.setEnabled(false);
+				Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1);
+				break;
+
+				default: 	Text.debug("Answers not found!"); break;
+				}
+				nextButton.setEnabled(true);
+				revealAllButton.setEnabled(false);
+			}
+		});
+		revealAllButton.setEnabled(true);	
+		
+		questCountLabel.setText("Question " + Main.getCUR_QUESTION_NUM() +
+				" of " + Main.getTOTAL_QUESTIONS());
 	}
 
-//	public void registerButton(int slot, String info) {
-//		switch (slot) {
-//		case 4: ansButton4.setText(info); ansButton4.setVisible(true);
-//
-//
-//		default: break;
-//
-//		}
-//	}
+	private void setStrikesLabel() {
+		String strikesOutput = "";
+		for (int i=0; i<cur_strikes; i++) {
+			strikesOutput += "X";
+		}
+	}
+	
+	private void checkDone() {
+		if (ansRemaining == 0) {
+			nextButton.setEnabled(true);
+			strikeButton.setEnabled(false);
+			revealAllButton.setEnabled(false);
+		}
+	}
+
+	//	public void registerButton(int slot, String info) {
+	//		switch (slot) {
+	//		case 4: ansButton4.setText(info); ansButton4.setVisible(true);
+	//
+	//
+	//		default: break;
+	//
+	//		}
+	//	}
 
 }

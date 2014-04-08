@@ -1,5 +1,6 @@
 package classes;
 
+import gui.AdminFrame;
 import gui.AdminWindow;
 import gui.MenuFrame;
 import gui.PlayWindow;
@@ -23,6 +24,10 @@ import obj.Player;
 import obj.Question;
 import obj.QuestionPack;
 import obj.Team;
+
+// TODO properly track team points/players
+// TODO interface for qpack/player input
+// TODO make pretty
 
 public class Main {
 
@@ -51,7 +56,7 @@ public class Main {
 	private static QuestionPack qpack;						// collection of questions
 	private static Team[] teams = new Team[MAX_TEAMS];
 	private static Question cur_question;				// current question sent by QuestionPack
-	private static int cur_question_num;
+	private static int cur_question_num, total_questions;			
 	private static int cur_team, cur_player;		// slot indices for arrays
 	private static int cur_turn;					// turn count
 	private static int cur_points;
@@ -112,6 +117,7 @@ public class Main {
 		} else {
 			aw.setQuestion(cur_question);
 		}
+
 	}
 
 	private static void addTeam(int slot) {
@@ -243,7 +249,9 @@ public class Main {
 
 			}
 		}
-		cur_player = 0;
+		total_questions = qpack.size();
+		cur_team = -1;
+		cur_player = -1;
 		nextQuestion();
 		while (qpack.hasNext()) {;
 		}
@@ -286,6 +294,8 @@ public class Main {
 
 	}
 
+	// TODO enable loading second question onwards
+	
 	/**
 	 * Called after all answers have been revealed. Gets new question, at
 	 * random, from QuestionPack. Sets up a new AdminWindow, if enabled.
@@ -323,8 +333,8 @@ public class Main {
 	}
 
 	/**
-	 * Called when the current player receives a strike; every turn is
-	 * ALT_EVERY_TURN == true
+	 * Called when the current player receives a strike; 
+	 * every turn when ALT_EVERY_TURN == true
 	 */
 	public static void nextPlayer() {
 		cur_player++;
@@ -337,6 +347,7 @@ public class Main {
 	}
 
 	public static void addStrike() {
+		Text.debug("Strike added to Team" + cur_team);
 		if (cur_team != -1) {
 
 			teams[cur_team].addStrike();
@@ -347,6 +358,9 @@ public class Main {
 			nextPlayer();
 			pw.setStrikes(teams[cur_team].getStrikeCount());
 			pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+		}
+		else {
+			Text.debug("EENT");
 		}
 	}
 
@@ -379,6 +393,10 @@ public class Main {
 	//	public static void revealAnswer(Answer ans, int slot) {
 	//		pw.revealAnswer(ans.getText(), slot);
 	//	}
+	public static void endGame() {
+		declareWinner();
+	}
+
 	public static void EXIT() {
 		System.exit(0);
 	}
@@ -430,19 +448,37 @@ public class Main {
 	}
 
 	public static Team getCUR_TEAM() {
-		return teams[cur_team];
+		if (cur_team != -1) {
+			return teams[cur_team]; 
+		}	
+		else {
+			return null;
+		}
 	}
 
 	public static String getCUR_PLAYER_NAME() {
 		return teams[cur_team].getPlayerName(cur_player);
 	}
 
+	public static String getCUR_TEAM_NAME() {
+		return teams[cur_team].getName();
+	}
+	
 	public static String getTEAM_NAME(int i) {
 		return teams[i].getName();
 	}
 
 	public static void setCUR_TEAM(int i) {
 		cur_team = i;
+		pw.setTeamLabel(i);
+	}
+	
+	public static int getCUR_QUESTION_NUM() {
+		return cur_question_num;
+	}
+	
+	public static int getTOTAL_QUESTIONS() {
+		return total_questions;
 	}
 
 	public static void setQUESTIONS(File qUESTIONS) {

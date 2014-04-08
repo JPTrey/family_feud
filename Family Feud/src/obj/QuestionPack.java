@@ -22,13 +22,7 @@ public class QuestionPack {
 	
 	public Question getQuestion(int selection) {
 		Question		q = questions.get(selection);
-//		int				rand;
-//		
-//		rand = (new Random().nextInt(questions.size()));
-//		q = questions.get(rand);
-//		questions.remove(rand);
-//		Text.debug("Question #" + q + " selected");
-		
+		questions.remove(selection);
 		
 		return q;
 	}

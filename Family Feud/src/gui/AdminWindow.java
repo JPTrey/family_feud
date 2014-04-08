@@ -67,12 +67,14 @@ public class AdminWindow extends JFrame {
 	 * @param q current question associated with this window and PlayWindow
 	 */
 	public void setQuestion(Question q) {
+		frame.registerQuestion(q);
+		
 		//		questPanel = new JPanel();
 		//		current_question_answers;
 
-		if (ansPanel == null) { 
-			ansPanel = new JPanel(); 
-		}
+//		if (ansPanel == null) { 
+//			ansPanel = new JPanel(); 
+//		}
 
 
 		//		else {
@@ -106,9 +108,9 @@ public class AdminWindow extends JFrame {
 		//		questPanel.setSize(Main.getADMIN_DIM().width, Main.getADMIN_DIM().height/2);
 		//		questPanel.setVisible(true);
 		//		questLabel.setVisible(true);
-		setupControlPanel();
-		switchTeamLabel();
-		ansPanel.setVisible(true);
+//		setupControlPanel();
+//		switchTeamLabel();
+//		ansPanel.setVisible(true);
 		this.q = q;
 	}
 
