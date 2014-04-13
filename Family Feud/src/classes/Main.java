@@ -1,7 +1,7 @@
 package classes;
 
-import gui.AdminFrame;
 import gui.AdminWindow;
+import gui.CreateTeamFrame;
 import gui.MenuFrame;
 import gui.PlayWindow;
 import gui.loadQuestionFrame;
@@ -15,9 +15,7 @@ import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 
 import obj.Answer;
 import obj.Player;
@@ -27,6 +25,7 @@ import obj.Team;
 
 // TODO properly track team points/players
 // TODO interface for qpack/player input
+// TODO wait for team input ('CreateTeamFrame.ready')
 // TODO make pretty
 
 public class Main {
@@ -36,7 +35,7 @@ public class Main {
 	public static int DEBUG_WAIT = 50;		// used for debug output; controls rate of String output (in milliseconds)
 	public static int CHAR_WAIT = 0;			// used for text output; controls rate of character output (in milliseconds)
 	public static int TEXT_WAIT = 0;			// used for text output; controls pause time when reading '~'
-	public static int TEAM_COUNT = 2;
+	//	public static int TEAM_COUNT = 2;
 	public static int MAX_ANSWERS = 10;
 	public static int MAX_TEAMS = 2;
 	public static int MAX_TEAM_SIZE = 10;
@@ -60,6 +59,7 @@ public class Main {
 	private static int cur_team, cur_player;		// slot indices for arrays
 	private static int cur_turn;					// turn count
 	private static int cur_points;
+	private static int team_count;					// number of teams in Team[]
 	private static JFrame title, menu;
 	private static AdminWindow aw;
 	private static PlayWindow pw;
@@ -230,38 +230,52 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		if (DEBUG) { 		// cmd team input
-			Scanner sc = new Scanner(System.in);
-			showAllQuestions();
-			for (int i = 0; i < MAX_TEAMS; i++) {			// placeholder teams
-				Text.out("\nTeam " + i + " name: ");
-				teams[i] = new Team(sc.nextLine());
-				Text.out("\nPlayer " + i + " name: ");
-				Text.debug("Team " + (i + 1) + ":Player " + (i + 1));
-			}
-		} else {
-			for (int i = 0; i < MAX_TEAMS; i++) {
-				java.awt.EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						new TeamWindow().setVisible(true);
-					}
-				});
+		//		if (DEBUG) { 		// cmd team input
+		//			Scanner sc = new Scanner(System.in);
+		//			showAllQuestions();
+		//			for (int i = 0; i < MAX_TEAMS; i++) {			// placeholder teams
+		//				Text.out("\nTeam " + i + " name: ");
+		//				teams[i] = new Team(sc.nextLine());
+		//				Text.out("\nPlayer " + i + " name: ");
+		//				Text.debug("Team " + (i + 1) + ":Player " + (i + 1));
+		//			}
+		//		} else {
+		//		for (int i = 0; i < MAX_TEAMS; i++) {
+		//			cur_team = i;
+		//		}
+		//		}
+		Text.debug("cur_team=" + cur_team);
+		cur_team = 0;
+		team_count = 0;
+		showCreateTeamFrame();
+		//		total_questions = qpack.size();
+		//		cur_player = -1;
+		//		nextQuestion();
+		//		while (qpack.hasNext()) {;
+		//		}
+	}
 
-			}
-		}
-		total_questions = qpack.size();
-		cur_team = -1;
-		cur_player = -1;
-		nextQuestion();
-		while (qpack.hasNext()) {;
+	public static void showCreateTeamFrame() {		
+		if (cur_team < MAX_TEAMS) {
+			CreateTeamFrame frame = new CreateTeamFrame();
+			frame.setVisible(true);
+			Text.debug("cur_team=" + cur_team);
 		}
 	}
 
-	public static void addTeam() {
-		String teamName = "";
-		while (teamName.equalsIgnoreCase(""));  // wait for user input
+	/**
+	 * Called from CreateTeamFrame.
+	 * @param teamName
+	 * @param playerNames
+	 */
+	public static void addTeam(String teamName, ArrayList<String> playerNames) {
+		Team t = new Team(teamName);
+		for (int i=0; i<playerNames.size(); i++) {
+			t.addPlayer(new Player(playerNames.get(i)));
+		}
 
-
+		teams[team_count] = t;
+		team_count++;
 	}
 
 	private static void showAllQuestions() {
@@ -277,34 +291,51 @@ public class Main {
 		pw.setPoints(cur_points);
 	}
 
-	public static void awardPoints(int points) {
-		teams[cur_team].addPoints(points);
-		if (teams[cur_team].getPoints() >= POINTS_TO_WIN) {
-			declareWinner();
+	/**
+	 * Increase total points count for team that won question.
+	 */
+	public static void awardPoints() {
+		if (cur_team != -1) {
+			teams[cur_team].addPoints(cur_points);
+			if (teams[cur_team].getPoints() >= POINTS_TO_WIN) {
+				declareWinner();
+			}
+		}
+	}
+
+	/**
+	 * Interface with PlayFrame. Updates points counter for current team.
+	 */
+	public static void updateTeamPoints() {
+		if (cur_team != -1) {
+			pw.setTeamPoints(teams[cur_team].getPoints(), cur_team);
 		}
 	}
 
 	private static void declareWinner() {
-		JPanel winnerPanel = new JPanel();
-		winnerPanel.add(new JLabel(teams[cur_team].getName()));
-
-		winnerPanel.setSize(pw.getSize());
-		winnerPanel.setVisible(true);
-		pw.add(winnerPanel);
-
+		Text.debug(cur_team + " wins!!");
 	}
 
 	// TODO enable loading second question onwards
-	
+
 	/**
 	 * Called after all answers have been revealed. Gets new question, at
 	 * random, from QuestionPack. Sets up a new AdminWindow, if enabled.
 	 */
 	public static void nextQuestion() {
 		cur_question_num++;
+		awardPoints();
+		updateTeamPoints();
+
 		if (qpack.size() == 0) {
 			declareWinner();
-		} else {
+		} 
+
+		else {
+			cur_team = -1;
+			cur_points = 0;		// reset points between questions
+
+			// show question selection window
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
@@ -315,11 +346,6 @@ public class Main {
 					}
 				}
 			});
-
-			//            cur_question = qpack.getQuestion();
-			//            Text.out(cur_question.getText() + "\n");
-			//            makePlayWindow();
-			//            makeAdminWindow();
 		}
 	}
 
@@ -337,13 +363,13 @@ public class Main {
 	 * every turn when ALT_EVERY_TURN == true
 	 */
 	public static void nextPlayer() {
-		cur_player++;
-		Text.debug("cur_player = " + cur_player);
-		if (cur_player == teams[cur_team].size()) {
-			cur_player = 0;
-		}
-		//		teams[cur_team].nextPlayer(cur_player);
-		pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+//		cur_player++;
+//		Text.debug("cur_player = " + cur_player);
+//		if (cur_player == teams[cur_team].size()) {
+//			cur_player = 0;
+//		}
+//		//		teams[cur_team].nextPlayer(cur_player);
+//		aw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 	}
 
 	public static void addStrike() {
@@ -353,14 +379,16 @@ public class Main {
 			teams[cur_team].addStrike();
 			if (teams[cur_team].checkStrikes()) { 	// if: team has too many strikes
 				switchTeams();
+				pw.switchTeamLabel();
+				aw.switchTeamLabel();
 			}
 
 			nextPlayer();
 			pw.setStrikes(teams[cur_team].getStrikeCount());
-			pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+//			pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 		}
 		else {
-			Text.debug("EENT");
+			Text.debug("No Team Assigned Strike!");
 		}
 	}
 
@@ -382,12 +410,21 @@ public class Main {
 	public static void setTeamButtonAction(int cur_team) {
 		setCUR_TEAM(cur_team);
 		pw.switchTeamLabel();
-		pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
+//		pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
 	}
 
-	public static void revealAnswer(String ansText, int ansPoints, int slot) {
+	/**
+	 * Called when an ansLabel is to be revealed.  
+	 * @param ansText
+	 * @param ansPoints
+	 * @param slot ansLabel 1-10.
+	 * @param solved set to false if revealAll is clicked.  Points are not awarded.
+	 */
+	public static void revealAnswer(String ansText, int ansPoints, int slot, boolean solved) {
 		pw.revealAnswer(ansText, slot);
-		addPoints(ansPoints);
+		if (solved) {
+			addPoints(ansPoints); 
+		}
 	}
 
 	//	public static void revealAnswer(Answer ans, int slot) {
@@ -419,7 +456,7 @@ public class Main {
 	}
 
 	public static int getTEAM_COUNT() {
-		return TEAM_COUNT;
+		return team_count;
 	}
 
 	public static int getMAX_TEAM_SIZE() {
@@ -463,20 +500,26 @@ public class Main {
 	public static String getCUR_TEAM_NAME() {
 		return teams[cur_team].getName();
 	}
-	
+
 	public static String getTEAM_NAME(int i) {
-		return teams[i].getName();
+		if (i < MAX_TEAMS) {
+			return teams[i].getName();
+		}
+		else return null;
 	}
 
 	public static void setCUR_TEAM(int i) {
 		cur_team = i;
-		pw.setTeamLabel(i);
+		if (i != -1) {
+			pw.setTeamLabel(i);
+		}
 	}
-	
+
+
 	public static int getCUR_QUESTION_NUM() {
 		return cur_question_num;
 	}
-	
+
 	public static int getTOTAL_QUESTIONS() {
 		return total_questions;
 	}

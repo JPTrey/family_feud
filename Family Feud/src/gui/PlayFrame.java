@@ -70,7 +70,7 @@ public class PlayFrame extends JFrame {
 		questLabel = new JLabel(q.getText());
 		questLabel.setForeground(new Color(255, 255, 255));
 		questLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		questLabel.setFont(new Font("MingLiU-ExtB", Font.BOLD, 40));
+		questLabel.setFont(new Font("MingLiU-ExtB", Font.BOLD, 32));
 		questLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(questLabel, BorderLayout.SOUTH);
 
@@ -86,7 +86,8 @@ public class PlayFrame extends JFrame {
 		teamLabel1.setFont(new Font("Marker Felt", Font.PLAIN, 25));
 		teamPanel.add(teamLabel1);
 
-		teamPoints1 = new JLabel("New label");
+		teamPoints1 = new JLabel("0");
+		teamPoints1.setHorizontalAlignment(SwingConstants.CENTER);
 		teamPoints1.setFont(new Font("Marker Felt", Font.PLAIN, 25));
 		teamPanel.add(teamPoints1);
 
@@ -94,7 +95,8 @@ public class PlayFrame extends JFrame {
 		teamLabel2.setFont(new Font("Marker Felt", Font.PLAIN, 25));
 		teamPanel.add(teamLabel2);
 
-		teamPoints2 = new JLabel("New label");
+		teamPoints2 = new JLabel("0");
+		teamPoints2.setHorizontalAlignment(SwingConstants.CENTER);
 		teamPoints2.setFont(new Font("Marker Felt", Font.PLAIN, 25));
 		teamPanel.add(teamPoints2);
 
@@ -254,6 +256,7 @@ public class PlayFrame extends JFrame {
 		int ansCount = q.answerCount();
 
 		questLabel.setText(q.getText());
+		setPoints(0);
 		
 		// reset ansLabels between questions
 		ansLabel1.setText(" ");
@@ -411,8 +414,14 @@ public class PlayFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * Updates teamPoints label after each question.
+	 * @param points
+	 * @param team
+	 */
 	public void setTeamPoints(int points, int team) {
-		if (team == 1) {
+		Text.debug("adding " + points + " points to Team" + team);
+		if (team == 0) {
 			teamPoints1.setText(Integer.toString(points));
 		}
 
@@ -447,6 +456,10 @@ public class PlayFrame extends JFrame {
 		}
 	}
 
+	public void setCurrentPlayer(String playerName) {
+		
+	}
+	
 	public void switchTeam() {
 		// TODO grey out opposite team label
 

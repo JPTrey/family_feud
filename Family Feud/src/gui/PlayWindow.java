@@ -391,7 +391,7 @@ public class PlayWindow extends JFrame {
 
 	public void switchTeamLabel() { frame.switchTeam(); }
 	public void setTeamLabel(int team) { frame.setCurrentTeam(team); }
-	public void switchPlayerLabel(String s) { playerLabel.setText("'" + s + "'"); }
+//	public void switchPlayerLabel(String s) { frame.setCurrentPlayer(s); }
 	
   /*
    * Supplemented Code
@@ -470,4 +470,14 @@ public class PlayWindow extends JFrame {
         // return the wrapper
         return backgroundPanel;
     }
+
+	/**
+	 * Updates team points label on the PlayFrame.
+	 * @param team current team
+	 * @param points points to be displayed
+	 */
+    public void setTeamPoints(int points, int team) {
+		frame.setTeamPoints(points, team);
+		
+	}
 }

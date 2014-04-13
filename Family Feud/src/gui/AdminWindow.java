@@ -190,12 +190,13 @@ public class AdminWindow extends JFrame {
 	//		nextQuestButton.setVisible(true); 
 	//	}
 
-	private void switchTeamLabel() {
-		if (teamLabel == null) { 
-			teamLabel = new JLabel(Main.getCUR_TEAM().getName()); 
-		}
-
-		teamLabel.setText(Main.getCUR_TEAM().getName() + " controls");
+	public void switchTeamLabel() {
+//		if (teamLabel == null) { 
+//			teamLabel = new JLabel(Main.getCUR_TEAM().getName()); 
+//		}
+//
+//		teamLabel.setText(Main.getCUR_TEAM().getName() + " controls");
+		frame.switchTeamLabel();
 	}
 
 	private void strike() {
@@ -259,5 +260,10 @@ public class AdminWindow extends JFrame {
 		// case 1:		pw.revealAnswer(a1.getAnswer()); a1.setVisible(false); break;
 		// default: 	Text.debug("Answers not found!"); break;
 		// }
+	}
+
+	public void switchPlayerLabel(String playerName) {
+		frame.setCurrentPlayer(playerName);
+		
 	}
 }

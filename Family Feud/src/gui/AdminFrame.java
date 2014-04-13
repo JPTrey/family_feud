@@ -31,7 +31,7 @@ public class AdminFrame extends JFrame {
 	private int 				ansButton1Pts, ansButton2Pts, ansButton3Pts, ansButton4Pts, ansButton5Pts, 
 	ansButton6Pts, ansButton7Pts, ansButton8Pts, ansButton9Pts, ansButton10Pts; 
 	private JButton				strikeButton, revealAllButton, nextButton, team1Button, team2Button;
-	private JPanel countPanel;
+	private JPanel				countPanel;
 
 	/**
 	 * Launch the application.
@@ -91,7 +91,7 @@ public class AdminFrame extends JFrame {
 		ansButton1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton1.setEnabled(false);
-				Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1);
+				Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -104,7 +104,7 @@ public class AdminFrame extends JFrame {
 		ansButton6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ansButton6.setEnabled(false);
-				Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6);
+				Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -116,7 +116,7 @@ public class AdminFrame extends JFrame {
 		ansButton2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton2.setEnabled(false);
-				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2);
+				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -128,7 +128,7 @@ public class AdminFrame extends JFrame {
 		ansButton7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton7.setEnabled(false);
-				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7);
+				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -140,7 +140,7 @@ public class AdminFrame extends JFrame {
 		ansButton3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton3.setEnabled(false);
-				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3);
+				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -152,7 +152,7 @@ public class AdminFrame extends JFrame {
 		ansButton8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton8.setEnabled(false);
-				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8);
+				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -164,7 +164,7 @@ public class AdminFrame extends JFrame {
 		ansButton4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton4.setEnabled(false);
-				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4);
+				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -176,7 +176,7 @@ public class AdminFrame extends JFrame {
 		ansButton9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton9.setEnabled(false);
-				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9);
+				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -188,7 +188,7 @@ public class AdminFrame extends JFrame {
 		ansButton5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton5.setEnabled(false);
-				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5);
+				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -200,7 +200,7 @@ public class AdminFrame extends JFrame {
 		ansButton10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton10.setEnabled(false);
-				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10);
+				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10, true);
 				ansRemaining--;
 				checkDone();
 			}
@@ -235,6 +235,9 @@ public class AdminFrame extends JFrame {
 		nextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Main.nextQuestion();
+				teamLabel.setText("No Team Controls");
+				team1Button.setEnabled(true);
+				team2Button.setEnabled(true);
 			}
 		});
 		nextButton.setEnabled(false);
@@ -256,7 +259,7 @@ public class AdminFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Main.setCUR_TEAM(1);
 				teamLabel.setText(Main.getCUR_TEAM().getName());
-				setEnabled(false);
+				team1Button.setEnabled(false);
 				team2Button.setEnabled(false);
 			}
 		});
@@ -275,7 +278,7 @@ public class AdminFrame extends JFrame {
 	public void registerQuestion(final Question q) {
 		ansRemaining = q.answerCount();
 		questLabel.setText(q.getText());
-		
+
 		// reset variables
 		revealAllButton.setEnabled(true);
 		strikeButton.setEnabled(true);
@@ -341,25 +344,25 @@ public class AdminFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				switch (q.answerCount()) {				
 				case 10:	ansButton10.setEnabled(false);
-				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10);
+				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10, false);
 				case 9:		ansButton9.setEnabled(false);
-				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9);
+				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9, false);
 				case 8:		ansButton8.setEnabled(false);
-				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8);
+				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8, false);
 				case 7: 	ansButton7.setEnabled(false);
-				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7);
+				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7, false);
 				case 6:		ansButton6.setEnabled(false);
-				Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6);
+				Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6, false);
 				case 5:		ansButton5.setEnabled(false);
-				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5);
+				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5, false);
 				case 4:		ansButton4.setEnabled(false);
-				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4);
+				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4, false);
 				case 3:		ansButton3.setEnabled(false);
-				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3);
+				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3, false);
 				case 2:		ansButton2.setEnabled(false);
-				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2);
+				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2, false);
 				case 1:		ansButton1.setEnabled(false);
-				Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1);
+				Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1, false);
 				break;
 
 				default: 	Text.debug("Answers not found!"); break;
@@ -369,24 +372,39 @@ public class AdminFrame extends JFrame {
 			}
 		});
 		revealAllButton.setEnabled(true);	
-		
+
 		questCountLabel.setText("Question " + Main.getCUR_QUESTION_NUM() +
 				" of " + Main.getTOTAL_QUESTIONS());
 	}
 
 	private void setStrikesLabel() {
-		String strikesOutput = "";
-		for (int i=0; i<cur_strikes; i++) {
-			strikesOutput += "X";
+		if (teamLabel.getText().equalsIgnoreCase("No Team Controls")) {
+			;
+		}
+
+		else {
+			String strikesOutput = "";
+			for (int i=0; i<cur_strikes; i++) {
+				strikesOutput += "X";
+			}
+			strikesLabel.setText(strikesOutput);
 		}
 	}
-	
+
+	public void setCurrentPlayer(String playerName) {
+
+	}
+
 	private void checkDone() {
 		if (ansRemaining == 0) {
 			nextButton.setEnabled(true);
 			strikeButton.setEnabled(false);
 			revealAllButton.setEnabled(false);
 		}
+	}
+
+	public void switchTeamLabel() {
+		teamLabel.setText(Main.getCUR_TEAM_NAME() + " Controls");
 	}
 
 	//	public void registerButton(int slot, String info) {
