@@ -25,46 +25,49 @@ import obj.Team;
 
 // TODO properly track team points/players
 // TODO interface for qpack/player input
-// TODO wait for team input ('CreateTeamFrame.ready')
+// TODO remove actionListener in LoadQuestionFrame
 // TODO make pretty
 
 public class Main {
 
 	/* Global Variables */
-	public static boolean DEBUG = true;			// true: debug methods and statements will be shown
-	public static int DEBUG_WAIT = 50;		// used for debug output; controls rate of String output (in milliseconds)
-	public static int CHAR_WAIT = 0;			// used for text output; controls rate of character output (in milliseconds)
-	public static int TEXT_WAIT = 0;			// used for text output; controls pause time when reading '~'
-	//	public static int TEAM_COUNT = 2;
-	public static int MAX_ANSWERS = 10;
-	public static int MAX_TEAMS = 2;
-	public static int MAX_TEAM_SIZE = 10;
-	public static int MAX_STRIKES = 3;
-	public static int POINTS_TO_WIN = 300;
-	public static long DRAMATIC_PAUSE = 1000;	// in milliseconds
-	public static String ADMIN_TITLE = "Administrator";
-	public static String PLAY_TITLE = "Family Feud";
-	public static boolean ALT_EVERY_TURN = false;	// true: team mate switched after every answer 
-	public static File QUESTION_FILE = new File("dogs.txt");
-	public static Dimension MENU_DIM = new Dimension(800, 600);
-	public static Dimension PLAY_DIM = new Dimension(1024, 768);
-	public static Dimension ADMIN_DIM = new Dimension(480, 300);
-	public static ImageIcon BACKGROUND_ICON_IMG = new ImageIcon("FamilyFeudBoard.jpg");
+	public static boolean 		DEBUG = true,			// true: debug methods and statements will be shown
+			ALT_EVERY_TURN = false,	// true: team mate switched after every answer 
+			FAST_MONEY = false;		
+	public static int 			DEBUG_WAIT = 50,		// used for debug output; controls rate of String output (in milliseconds)
+			CHAR_WAIT = 0,			// used for text output; controls rate of character output (in milliseconds)
+			TEXT_WAIT = 0,			// used for text output; controls pause time when reading '~'
+			MAX_ANSWERS = 10,
+			MAX_TEAMS = 2,
+			MAX_TEAM_SIZE = 10,
+			MAX_STRIKES = 3,
+			POINTS_TO_WIN = 300;
+	public static long			DRAMATIC_PAUSE = 1000;	// in milliseconds	
+	public static String 		ADMIN_TITLE = "Administrator",
+			PLAY_TITLE = "Family Feud";	
+	public static File 			QUESTION_FILE = new File("dogs.txt");	
+	public static Dimension 	MENU_DIM = new Dimension(800, 600),
+			PLAY_DIM = new Dimension(1024, 768),
+			ADMIN_DIM = new Dimension(480, 300);
+	public static ImageIcon 	BACKGROUND_ICON_IMG = new ImageIcon("FamilyFeudBoard.jpg");
 
 	/* Private Variable */
 	private static QuestionPack qpack;						// collection of questions
-	private static Team[] teams = new Team[MAX_TEAMS];
-	private static Question cur_question;				// current question sent by QuestionPack
-	private static int cur_question_num, total_questions;			
-	private static int cur_team, cur_player;		// slot indices for arrays
-	private static int cur_turn;					// turn count
-	private static int cur_points;
-	private static int team_count;					// number of teams in Team[]
-	private static JFrame title, menu;
-	private static AdminWindow aw;
-	private static PlayWindow pw;
-	private static JMenuBar menubar;
-	private static Scanner sc = new Scanner(System.in);
+	private static Team[] 		teams = new Team[MAX_TEAMS];
+	private static Question 	cur_question;				// current question sent by QuestionPack
+	private static int 			cur_question_num, 
+	total_questions,			
+	cur_team, 
+	cur_player,					// slot indices for arrays
+	cur_turn,					// turn count
+	cur_points,
+	team_count;					// number of teams in Team[]
+	private static JFrame 		title, 
+	menu;
+	private static AdminWindow 	aw;
+	private static PlayWindow 	pw;
+	private static JMenuBar 	menubar;
+	private static Scanner 		sc = new Scanner(System.in);
 
 	//TODO end after all questions
 	//TODO make pretty
@@ -363,13 +366,13 @@ public class Main {
 	 * every turn when ALT_EVERY_TURN == true
 	 */
 	public static void nextPlayer() {
-//		cur_player++;
-//		Text.debug("cur_player = " + cur_player);
-//		if (cur_player == teams[cur_team].size()) {
-//			cur_player = 0;
-//		}
-//		//		teams[cur_team].nextPlayer(cur_player);
-//		aw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+		//		cur_player++;
+		//		Text.debug("cur_player = " + cur_player);
+		//		if (cur_player == teams[cur_team].size()) {
+		//			cur_player = 0;
+		//		}
+		//		//		teams[cur_team].nextPlayer(cur_player);
+		//		aw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 	}
 
 	public static void addStrike() {
@@ -385,7 +388,7 @@ public class Main {
 
 			nextPlayer();
 			pw.setStrikes(teams[cur_team].getStrikeCount());
-//			pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
+			//			pw.switchPlayerLabel(teams[cur_team].getPlayerName(cur_player));
 		}
 		else {
 			Text.debug("No Team Assigned Strike!");
@@ -410,7 +413,7 @@ public class Main {
 	public static void setTeamButtonAction(int cur_team) {
 		setCUR_TEAM(cur_team);
 		pw.switchTeamLabel();
-//		pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
+		//		pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
 	}
 
 	/**
@@ -421,9 +424,16 @@ public class Main {
 	 * @param solved set to false if revealAll is clicked.  Points are not awarded.
 	 */
 	public static void revealAnswer(String ansText, int ansPoints, int slot, boolean solved) {
-		pw.revealAnswer(ansText, slot);
-		if (solved) {
-			addPoints(ansPoints); 
+		if (!FAST_MONEY) {
+			pw.revealAnswer(ansText, slot);
+			if (solved) {
+				addPoints(ansPoints); 
+			}
+		} 
+		
+		else {
+			pw.storeAnswer(ansText, slot);
+			nextQuestion();
 		}
 	}
 
@@ -530,5 +540,12 @@ public class Main {
 
 	public static void setALT_EVERY_TURN(boolean b) {
 		ALT_EVERY_TURN = b;
+	}
+
+	/**
+	 * Called from LoadQuestionFrame.  Begins Fast Money mode.
+	 */
+	public static void setFAST_MONEY() {
+		FAST_MONEY = true;
 	}
 }

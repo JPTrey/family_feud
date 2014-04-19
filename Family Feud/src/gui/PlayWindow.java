@@ -480,4 +480,9 @@ public class PlayWindow extends JFrame {
 		frame.setTeamPoints(points, team);
 		
 	}
+
+	public void storeAnswer(String ansText, int slot) {
+		frame.storeAnswer(ansText, slot);
+		
+	}
 }

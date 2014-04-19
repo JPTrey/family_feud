@@ -30,8 +30,11 @@ public class AdminFrame extends JFrame {
 	private int					cur_strikes, ansRemaining;
 	private int 				ansButton1Pts, ansButton2Pts, ansButton3Pts, ansButton4Pts, ansButton5Pts, 
 	ansButton6Pts, ansButton7Pts, ansButton8Pts, ansButton9Pts, ansButton10Pts; 
+	private int					slot;							// used for caching answers/points for Fast Money round
 	private JButton				strikeButton, revealAllButton, nextButton, team1Button, team2Button;
 	private JPanel				countPanel;
+	private String[]			ansCache = new String[5];		// stores answers for Fast Money round
+	private int[]				ptsCache = new int[5];			// stores answer points for Fast Money round
 
 	/**
 	 * Launch the application.
@@ -91,9 +94,23 @@ public class AdminFrame extends JFrame {
 		ansButton1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton1.setEnabled(false);
-				Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1, true);
-				ansRemaining--;
-				checkDone();
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton1.getText();
+					ptsCache[slot] = ansButton1Pts;
+					Text.debug(ansCache[slot] + " in ansCache");
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
+				else {
+					Main.revealAnswer(ansButton1.getText(), ansButton1Pts, 1, true);
+					ansRemaining--;
+					checkDone();
+				}
 			}
 		});
 		ansButton1.setVisible(false);
@@ -104,18 +121,45 @@ public class AdminFrame extends JFrame {
 		ansButton6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ansButton6.setEnabled(false);
-				Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6, true);
-				ansRemaining--;
-				checkDone();
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton2.getText();
+					ptsCache[slot] = ansButton6Pts;
+					slot++;
+					if (slot == 5) {	
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
+				else {
+					Main.revealAnswer(ansButton6.getText(), ansButton6Pts, 6, true);
+					ansRemaining--;
+					checkDone();
+				}
 			}
 		});
+		
+		
 		ansButton6.setVisible(false);
 		ansPanel.add(ansButton6);
+		
+		
 
 		ansButton2 = new JButton();
 		ansButton2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton2.setEnabled(false);
+				ansCache[slot] = ansButton2.getText();
+				ptsCache[slot] = ansButton2Pts;
+				Text.debug(ansCache[slot] + " in ansCache");
+				slot++;
+				if (slot == 5) {		// if: all five answers received, reveal all cached answers
+					revealCached();
+				}
+				else {
+					Main.nextQuestion();
+				}
 				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2, true);
 				ansRemaining--;
 				checkDone();
@@ -128,6 +172,17 @@ public class AdminFrame extends JFrame {
 		ansButton7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton7.setEnabled(false);
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton7.getText();
+					ptsCache[slot] = ansButton7Pts;
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
 				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7, true);
 				ansRemaining--;
 				checkDone();
@@ -140,6 +195,17 @@ public class AdminFrame extends JFrame {
 		ansButton3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton3.setEnabled(false);
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton3.getText();
+					ptsCache[slot] = ansButton3Pts;
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
 				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3, true);
 				ansRemaining--;
 				checkDone();
@@ -152,6 +218,17 @@ public class AdminFrame extends JFrame {
 		ansButton8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton8.setEnabled(false);
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton8.getText();
+					ptsCache[slot] = ansButton8Pts;
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
 				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8, true);
 				ansRemaining--;
 				checkDone();
@@ -164,6 +241,17 @@ public class AdminFrame extends JFrame {
 		ansButton4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton4.setEnabled(false);
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton4.getText();
+					ptsCache[slot] = ansButton4Pts;
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
 				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4, true);
 				ansRemaining--;
 				checkDone();
@@ -176,6 +264,17 @@ public class AdminFrame extends JFrame {
 		ansButton9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton9.setEnabled(false);
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton9.getText();
+					ptsCache[slot] = ansButton9Pts;
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
 				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9, true);
 				ansRemaining--;
 				checkDone();
@@ -188,6 +287,17 @@ public class AdminFrame extends JFrame {
 		ansButton5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton5.setEnabled(false);
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton5.getText();
+					ptsCache[slot] = ansButton5Pts;
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
 				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5, true);
 				ansRemaining--;
 				checkDone();
@@ -200,6 +310,17 @@ public class AdminFrame extends JFrame {
 		ansButton10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton10.setEnabled(false);
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton10.getText();
+					ptsCache[slot] = ansButton10Pts;
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Main.nextQuestion();
+					}
+				}
 				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10, true);
 				ansRemaining--;
 				checkDone();
@@ -276,6 +397,11 @@ public class AdminFrame extends JFrame {
 	}
 
 	public void registerQuestion(final Question q) {
+		if (Main.FAST_MONEY) {
+			slot = 0;
+		}
+
+
 		ansRemaining = q.answerCount();
 		questLabel.setText(q.getText());
 
@@ -405,6 +531,23 @@ public class AdminFrame extends JFrame {
 
 	public void switchTeamLabel() {
 		teamLabel.setText(Main.getCUR_TEAM_NAME() + " Controls");
+	}
+	
+	/**
+	 * Called when five answers have been selected during Fast Money round.  Reveals all answers.
+	 */
+	private void revealCached() {
+		for (int i=0; i<5; i++) {
+			Main.revealAnswer(ansCache[i], ptsCache[i], i, true);
+			revealAllButton.setText("Conceal");
+			revealAllButton.addActionListener(new ActionListener(
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					Main.concealAll();
+				
+			});
+		}
 	}
 
 	//	public void registerButton(int slot, String info) {

@@ -18,6 +18,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import obj.Question;
+import classes.Main;
 import classes.Text;
 
 public class PlayFrame extends JFrame {
@@ -30,7 +31,10 @@ public class PlayFrame extends JFrame {
 	private JLabel ansLabel1, ansLabel2, ansLabel3, ansLabel4, ansLabel5, 
 	ansLabel6, ansLabel7, ansLabel8, ansLabel9, ansLabel10,
 	pointsLabel, questLabel, strikesLabel, teamLabel1, teamLabel2, teamPoints1, teamPoints2;
-
+	private String[] ansTexts = new String[10];		// stored answers during Fast Money
+	private int[] sequence = new int[5];			// answer button sequence chosen by Player 1
+	private int fmAnsNum;							// cell where to store current ansewr chosen by Player
+	
 	/**
 	 * Launch the application.
 	 */
@@ -152,103 +156,12 @@ public class PlayFrame extends JFrame {
 		ansLabel8 = new JLabel();
 		ansLabel9 = new JLabel();
 		ansLabel10 = new JLabel();
-
+		
+		if (Main.FAST_MONEY) {
+			fmAnsNum = 0;
+		}
+		
 		registerQuestion(q);
-
-		//		if (ansCount >= 1) {
-		//			ansLabel1.setText("1"); 	
-		//		}
-		//		ansLabel1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel1.setBackground(new Color(255, 215, 0));
-		//		ansLabel1.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol15.add(ansLabel1);
-		//		ansLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 2) {
-		//			ansLabel2.setText("2"); 	
-		//		}
-		//		ansLabel2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel2.setBackground(new Color(255, 215, 0));
-		//		ansLabel2.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol15.add(ansLabel2);
-		//		ansLabel2.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 3) {
-		//			ansLabel3.setText("3"); 	
-		//		}
-		//		ansLabel3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel3.setBackground(new Color(255, 215, 0));
-		//		ansLabel3.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol15.add(ansLabel3);
-		//		ansLabel3.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 4) {
-		//			ansLabel4.setText("4"); 
-		//		}
-		//		ansLabel4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel4.setBackground(new Color(255, 215, 0));
-		//		ansLabel4.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol15.add(ansLabel4);
-		//		ansLabel4.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 5) {
-		//			ansLabel5.setText("5"); 	
-		//		}
-		//		ansLabel5.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel5.setBackground(new Color(255, 215, 0));
-		//		ansLabel5.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol15.add(ansLabel5);
-		//		ansLabel5.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		JPanel ansCol610 = new JPanel();
-		//		ansCol610.setBackground(new Color(255, 215, 0));
-		//		ansCol610.setPreferredSize(new Dimension(462, 10));
-		//		ansPanel.add(ansCol610, BorderLayout.EAST);
-		//		ansCol610.setLayout(new GridLayout(0, 1, 0, 0));
-		//
-		//		if (ansCount >= 6) {
-		//			ansLabel6.setText("6"); 
-		//		}
-		//		ansLabel6.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel6.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol610.add(ansLabel6);
-		//		ansLabel6.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 7) {
-		//			ansLabel7.setText("7"); 
-		//		}
-		//		ansLabel7.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel7.setBackground(new Color(255, 215, 0));
-		//		ansLabel7.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol610.add(ansLabel7);
-		//		ansLabel7.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 8) {
-		//			ansLabel8.setText("8"); 	
-		//		}
-		//		ansLabel8.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel8.setBackground(new Color(255, 215, 0));
-		//		ansLabel8.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol610.add(ansLabel8);
-		//		ansLabel8.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 9) {
-		//			ansLabel9.setText("9"); 	
-		//		}
-		//		ansLabel9.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel9.setBackground(new Color(255, 215, 0));
-		//		ansLabel9.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol610.add(ansLabel9);
-		//		ansLabel9.setHorizontalAlignment(SwingConstants.CENTER);
-		//
-		//		if (ansCount >= 10) {
-		//			ansLabel10.setText("10"); 	
-		//		}
-		//		ansLabel10.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		//		ansLabel10.setBackground(new Color(255, 215, 0));
-		//		ansLabel10.setFont(new Font("Krungthep", Font.PLAIN, 30));
-		//		ansCol610.add(ansLabel10);
-		//		ansLabel10.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
 	public void registerQuestion(Question q) {
@@ -257,7 +170,7 @@ public class PlayFrame extends JFrame {
 
 		questLabel.setText(q.getText());
 		setPoints(0);
-		
+
 		// reset ansLabels between questions
 		ansLabel1.setText(" ");
 		ansLabel2.setText(" ");
@@ -269,7 +182,7 @@ public class PlayFrame extends JFrame {
 		ansLabel8.setText(" ");
 		ansLabel9.setText(" ");
 		ansLabel10.setText(" ");
-		
+
 		ansPanel = new JPanel();
 		ansPanel.setBackground(new Color(255, 165, 0));
 		ansPanel.setForeground(Color.BLUE);
@@ -283,7 +196,7 @@ public class PlayFrame extends JFrame {
 		ansPanel.add(ansCol15, BorderLayout.WEST);
 		ansCol15.setLayout(new GridLayout(0, 1, 0, 0));
 
-		if (ansCount >= 1) {
+		if (!Main.FAST_MONEY && ansCount >= 1) {
 			ansLabel1.setText("1"); 	
 		}
 		ansLabel1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -292,7 +205,7 @@ public class PlayFrame extends JFrame {
 		ansCol15.add(ansLabel1);
 		ansLabel1.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 2) {
+		if (!Main.FAST_MONEY && ansCount >= 2) {
 			ansLabel2.setText("2"); 	
 		}
 		ansLabel2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -301,7 +214,7 @@ public class PlayFrame extends JFrame {
 		ansCol15.add(ansLabel2);
 		ansLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 3) {
+		if (!Main.FAST_MONEY && ansCount >= 3) {
 			ansLabel3.setText("3"); 	
 		}
 		ansLabel3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -310,7 +223,7 @@ public class PlayFrame extends JFrame {
 		ansCol15.add(ansLabel3);
 		ansLabel3.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 4) {
+		if (!Main.FAST_MONEY && ansCount >= 4) {
 			ansLabel4.setText("4"); 
 		}
 		ansLabel4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -319,7 +232,7 @@ public class PlayFrame extends JFrame {
 		ansCol15.add(ansLabel4);
 		ansLabel4.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 5) {
+		if (!Main.FAST_MONEY && ansCount >= 5) {
 			ansLabel5.setText("5"); 	
 		}
 		ansLabel5.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -334,7 +247,7 @@ public class PlayFrame extends JFrame {
 		ansPanel.add(ansCol610, BorderLayout.EAST);
 		ansCol610.setLayout(new GridLayout(0, 1, 0, 0));
 
-		if (ansCount >= 6) {
+		if (!Main.FAST_MONEY && ansCount >= 6) {
 			ansLabel6.setText("6"); 
 		}
 		ansLabel6.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -342,7 +255,7 @@ public class PlayFrame extends JFrame {
 		ansCol610.add(ansLabel6);
 		ansLabel6.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 7) {
+		if (!Main.FAST_MONEY && ansCount >= 7) {
 			ansLabel7.setText("7"); 
 		}
 		ansLabel7.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -351,7 +264,7 @@ public class PlayFrame extends JFrame {
 		ansCol610.add(ansLabel7);
 		ansLabel7.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 8) {
+		if (!Main.FAST_MONEY && ansCount >= 8) {
 			ansLabel8.setText("8"); 	
 		}
 		ansLabel8.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -360,7 +273,7 @@ public class PlayFrame extends JFrame {
 		ansCol610.add(ansLabel8);
 		ansLabel8.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 9) {
+		if (!Main.FAST_MONEY && ansCount >= 9) {
 			ansLabel9.setText("9"); 	
 		}
 		ansLabel9.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -369,7 +282,7 @@ public class PlayFrame extends JFrame {
 		ansCol610.add(ansLabel9);
 		ansLabel9.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (ansCount >= 10) {
+		if (!Main.FAST_MONEY && ansCount >= 10) {
 			ansLabel10.setText("10"); 	
 		}
 		ansLabel10.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -377,6 +290,7 @@ public class PlayFrame extends JFrame {
 		ansLabel10.setFont(new Font("Krungthep", Font.PLAIN, 30));
 		ansCol610.add(ansLabel10);
 		ansLabel10.setHorizontalAlignment(SwingConstants.CENTER);
+
 	}
 
 	/**
@@ -397,6 +311,35 @@ public class PlayFrame extends JFrame {
 		case 2:		ansLabel2.setText(ansText); break;
 		case 1:		ansLabel1.setText(ansText); break;
 		default: 	Text.debug("Answers not found!"); break;
+		}
+	}
+
+	/**
+	 * Called when an ansButton is clicked in AdminFrame during Fast Money.
+	 * Doesn't immediately reveal answers
+	 * @param ansText text from ansButton
+	 * @param slot 1-10, depending on value
+	 */
+	public void storeAnswer(String ansText, int slot) {
+		ansTexts[fmAnsNum] = ansText;
+		sequence[fmAnsNum] = slot;
+		fmAnsNum++;
+	}
+
+	/**
+	 * Called after both players have finished the Fast Money round.
+	 */
+	public void revealAnswerFastMoney() {
+		if (ansTexts.length == 10) {
+			for (int i=0; i<10; i++) {
+				revealAnswer(ansTexts[i], i);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -457,9 +400,9 @@ public class PlayFrame extends JFrame {
 	}
 
 	public void setCurrentPlayer(String playerName) {
-		
+
 	}
-	
+
 	public void switchTeam() {
 		// TODO grey out opposite team label
 

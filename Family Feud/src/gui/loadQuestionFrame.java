@@ -17,6 +17,11 @@ import javax.swing.event.ListSelectionListener;
 
 import obj.QuestionPack;
 import classes.Main;
+import classes.Text;
+
+import java.awt.GridLayout;
+
+import javax.swing.JSeparator;
 
 public class loadQuestionFrame extends JFrame {
 
@@ -64,6 +69,7 @@ public class loadQuestionFrame extends JFrame {
 		
 		JPanel selectPanel = new JPanel();
 		contentPane.add(selectPanel, BorderLayout.EAST);
+		selectPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		selectButton = new JButton("Select");
 		selectPanel.add(selectButton);
@@ -77,6 +83,29 @@ public class loadQuestionFrame extends JFrame {
 			}			
 		});
 		selectButton.setEnabled(false);
+		
+		final JButton fastMoneyButton = new JButton("Fast Money");
+		fastMoneyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Main.setFAST_MONEY();
+				setTitle("Select Five Questions");
+				questList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				questList.addListSelectionListener(new ListSelectionListener() {
+
+					public void valueChanged(ListSelectionEvent e) {
+						Text.debug((questList.getSelectedIndices().length + " " + questList.getSelectedValues().length));
+						if (questList.getSelectedValues().length == 5) {
+							Text.debug("Showing Select Button");
+							selectButton.setEnabled(true);
+						}
+					}
+				});	
+				
+				selectButton.setEnabled(false);
+				fastMoneyButton.setEnabled(false);
+			}
+		});
+		selectPanel.add(fastMoneyButton);
 	}
 
 }
