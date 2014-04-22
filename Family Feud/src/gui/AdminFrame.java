@@ -57,7 +57,7 @@ public class AdminFrame extends JFrame {
 	 */
 	public AdminFrame() {
 		setTitle("Family Feud - Admin");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,15 +95,17 @@ public class AdminFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton1.setEnabled(false);
 				if (Main.FAST_MONEY) {
+					Text.debug("FAST_MONEY = " + Main.FAST_MONEY);
 					ansCache[slot] = ansButton1.getText();
 					ptsCache[slot] = ansButton1Pts;
-					Text.debug(ansCache[slot] + " in ansCache");
+					Text.debug(ansCache[slot] + " in ansCache, slot = " + slot);
 					slot++;
 					if (slot == 5) {		// if: all five answers received, reveal all cached answers
 						revealCached();
 					}
 					else {
 						Main.nextQuestion();
+						Text.debug("Doing stuff");
 					}
 				}
 				else {
@@ -122,7 +124,7 @@ public class AdminFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ansButton6.setEnabled(false);
 				if (Main.FAST_MONEY) {
-					ansCache[slot] = ansButton2.getText();
+					ansCache[slot] = ansButton6.getText();
 					ptsCache[slot] = ansButton6Pts;
 					slot++;
 					if (slot == 5) {	
@@ -139,30 +141,35 @@ public class AdminFrame extends JFrame {
 				}
 			}
 		});
-		
-		
+
+
 		ansButton6.setVisible(false);
 		ansPanel.add(ansButton6);
-		
-		
+
+
 
 		ansButton2 = new JButton();
 		ansButton2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton2.setEnabled(false);
-				ansCache[slot] = ansButton2.getText();
-				ptsCache[slot] = ansButton2Pts;
-				Text.debug(ansCache[slot] + " in ansCache");
-				slot++;
-				if (slot == 5) {		// if: all five answers received, reveal all cached answers
-					revealCached();
+				if (Main.FAST_MONEY) {
+					ansCache[slot] = ansButton2.getText();
+					ptsCache[slot] = ansButton2Pts;
+					Text.debug(ansCache[slot] + " in ansCache");
+					slot++;
+					if (slot == 5) {		// if: all five answers received, reveal all cached answers
+						revealCached();
+					}
+					else {
+						Text.debug("Doing more stuff");
+						Main.nextQuestion();
+					}
 				}
 				else {
-					Main.nextQuestion();
+					Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2, true);
+					ansRemaining--;
+					checkDone();
 				}
-				Main.revealAnswer(ansButton2.getText(), ansButton2Pts, 2, true);
-				ansRemaining--;
-				checkDone();
 			}
 		});
 		ansButton2.setVisible(false);
@@ -183,9 +190,11 @@ public class AdminFrame extends JFrame {
 						Main.nextQuestion();
 					}
 				}
-				Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7, true);
-				ansRemaining--;
-				checkDone();
+				else {
+					Main.revealAnswer(ansButton7.getText(), ansButton7Pts, 7, true);
+					ansRemaining--;
+					checkDone();
+				}
 			}
 		});
 		ansButton7.setVisible(false);
@@ -206,9 +215,11 @@ public class AdminFrame extends JFrame {
 						Main.nextQuestion();
 					}
 				}
-				Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3, true);
-				ansRemaining--;
-				checkDone();
+				else {
+					Main.revealAnswer(ansButton3.getText(), ansButton3Pts, 3, true);
+					ansRemaining--;
+					checkDone();
+				}
 			}
 		});
 		ansButton3.setVisible(false);
@@ -229,9 +240,11 @@ public class AdminFrame extends JFrame {
 						Main.nextQuestion();
 					}
 				}
-				Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8, true);
-				ansRemaining--;
-				checkDone();
+				else {
+					Main.revealAnswer(ansButton8.getText(), ansButton8Pts, 8, true);
+					ansRemaining--;
+					checkDone();
+				}
 			}
 		});
 		ansButton8.setVisible(false);
@@ -252,9 +265,11 @@ public class AdminFrame extends JFrame {
 						Main.nextQuestion();
 					}
 				}
-				Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4, true);
-				ansRemaining--;
-				checkDone();
+				else {
+					Main.revealAnswer(ansButton4.getText(), ansButton4Pts, 4, true);
+					ansRemaining--;
+					checkDone();
+				}
 			}
 		});
 		ansButton4.setVisible(false);
@@ -275,9 +290,11 @@ public class AdminFrame extends JFrame {
 						Main.nextQuestion();
 					}
 				}
-				Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9, true);
-				ansRemaining--;
-				checkDone();
+				else {
+					Main.revealAnswer(ansButton9.getText(), ansButton9Pts, 9, true);
+					ansRemaining--;
+					checkDone();
+				}
 			}
 		});
 		ansButton9.setVisible(false);
@@ -297,10 +314,11 @@ public class AdminFrame extends JFrame {
 					else {
 						Main.nextQuestion();
 					}
+				} else {
+					Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5, true);
+					ansRemaining--;
+					checkDone();
 				}
-				Main.revealAnswer(ansButton5.getText(), ansButton5Pts, 5, true);
-				ansRemaining--;
-				checkDone();
 			}
 		});
 		ansButton5.setVisible(false);
@@ -320,10 +338,12 @@ public class AdminFrame extends JFrame {
 					else {
 						Main.nextQuestion();
 					}
+				} 
+				else {
+					Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10, true);
+					ansRemaining--;
+					checkDone();
 				}
-				Main.revealAnswer(ansButton10.getText(), ansButton10Pts, 10, true);
-				ansRemaining--;
-				checkDone();
 			}
 		});
 		ansButton10.setVisible(false);
@@ -394,11 +414,11 @@ public class AdminFrame extends JFrame {
 			}
 		});
 		cmdPanel.add(endButton);
+		slot = 0;
 	}
 
 	public void registerQuestion(final Question q) {
 		if (Main.FAST_MONEY) {
-			slot = 0;
 		}
 
 
@@ -532,22 +552,23 @@ public class AdminFrame extends JFrame {
 	public void switchTeamLabel() {
 		teamLabel.setText(Main.getCUR_TEAM_NAME() + " Controls");
 	}
-	
+
 	/**
 	 * Called when five answers have been selected during Fast Money round.  Reveals all answers.
 	 */
 	private void revealCached() {
+		Text.debug("Revealing all");
 		for (int i=0; i<5; i++) {
 			Main.revealAnswer(ansCache[i], ptsCache[i], i, true);
-			revealAllButton.setText("Conceal");
-			revealAllButton.addActionListener(new ActionListener(
-
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					Main.concealAll();
-				
-			});
+			//			revealAllButton.addActionListener(new ActionListener(
+			//
+			//				@Override
+			//				public void actionPerformed(ActionEvent arg0) {
+			//					Main.concealAll();
+			//				
+			//			});
 		}
+		revealAllButton.setText("Conceal");
 	}
 
 	//	public void registerButton(int slot, String info) {

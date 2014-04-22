@@ -46,7 +46,7 @@ public class MenuFrame extends JFrame {
 	public MenuFrame() {
 		setTitle("Family Feud");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 250, 300);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -75,12 +75,7 @@ public class MenuFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("64px"),
-				ColumnSpec.decode("112px"),
-				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("118px"),
-				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("82px"),},
+				ColumnSpec.decode("center:241px"),},
 			new RowSpec[] {
 				FormFactory.UNRELATED_GAP_ROWSPEC,
 				RowSpec.decode("29px"),
@@ -99,23 +94,26 @@ public class MenuFrame extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));
 		
-		JButton button = new JButton("Start Game");
+		final JButton button = new JButton("Start Game");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Loading...");
+				button.setEnabled(false);
 				Main.playGame();
+				dispose();
 			}
 		});
-		contentPane.add(button, "2, 4, left, top");
+		contentPane.add(button, "1, 4, center, top");
 		
 		JButton btnStartGame = new JButton("How to Play");
 		btnStartGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		contentPane.add(btnStartGame, "2, 10, center, top");
+		contentPane.add(btnStartGame, "1, 8, center, top");
 		
 		JButton btnAbout = new JButton("About");
-		contentPane.add(btnAbout, "2, 14, center, top");
+		contentPane.add(btnAbout, "1, 12, center, top");
 	}
 
 }

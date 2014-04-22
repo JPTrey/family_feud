@@ -22,20 +22,19 @@ import javax.swing.border.EmptyBorder;
 
 import classes.Main;
 import classes.Text;
+import java.awt.Component;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Rectangle;
 
 public class CreateTeamFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField teamTextField;
-	private JTextField txtPlayer1;
-	private JTextField txtPlayer5;
-	private JTextField txtPlayer4;
-	private JTextField txtPlayer3;
-	private JTextField txtPlayer2;
-	private JSeparator separator_1;
-	private JPanel panel;
 	private JButton addButton;
 	private int		team_num;		// team being created
+	private JTextField teamTextField2;
 
 	/**
 	 * Launch the application.
@@ -57,20 +56,31 @@ public class CreateTeamFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public CreateTeamFrame() {
-		setTitle("Create Team");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(new Rectangle(83, 22, 320, 200));
+		setTitle("Enter Team Names");
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 350, 200);
 		contentPane = new JPanel();
+		contentPane.setBounds(new Rectangle(0, 0, 320, 200));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-
-		JPanel namePanel = new JPanel();
-		contentPane.add(namePanel, BorderLayout.NORTH);
+		GridBagLayout gbl_contentPane = new GridBagLayout();
+		gbl_contentPane.columnWidths = new int[] {204, 150, 0};
+		gbl_contentPane.rowHeights = new int[]{40, 0, 0, 0, 0};
+		gbl_contentPane.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		contentPane.setLayout(gbl_contentPane);
 
 		teamTextField = new JTextField();
+		GridBagConstraints gbc_teamTextField = new GridBagConstraints();
+		gbc_teamTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_teamTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_teamTextField.gridx = 0;
+		gbc_teamTextField.gridy = 0;
+		contentPane.add(teamTextField, gbc_teamTextField);
+		teamTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
 		teamTextField.setHorizontalAlignment(SwingConstants.LEFT);
-		teamTextField.setText("Team Name");
+		teamTextField.setText("Team 1 Name");
 		teamTextField.addFocusListener(new FocusListener() {
 
 			@Override
@@ -102,193 +112,115 @@ public class CreateTeamFrame extends JFrame {
 				else if (teamTextField.getText().equalsIgnoreCase("Team Name")) { 
 					addButton.setEnabled(false); 
 				}
-
+				else if (teamTextField2.getText().equalsIgnoreCase("Team Name")) { 
+					addButton.setEnabled(false); 
+				}
+				
 				else { 
 					addButton.setEnabled(true); 
 				}
 			}
 		});
-		namePanel.add(teamTextField);
 		teamTextField.setToolTipText("Team Name");
 		teamTextField.setColumns(10);
 
-		JPanel playersPanel = new JPanel();
-		contentPane.add(playersPanel, BorderLayout.CENTER);
-		playersPanel.setLayout(new GridLayout(0, 1, 0, 0));
-
-		txtPlayer1 = new JTextField();
-		txtPlayer1.setText("Player 1");
-		txtPlayer1.setName("");
-		txtPlayer1.setForeground(Color.GRAY);
-		txtPlayer1.addFocusListener(new FocusListener() {
+		teamTextField2 = new JTextField();
+		teamTextField2.setToolTipText("Team Name");
+		teamTextField2.setText("Team 2 Name");
+		teamTextField2.setHorizontalAlignment(SwingConstants.LEFT);
+		teamTextField2.setColumns(10);
+		teamTextField2.setAlignmentX(0.0f);
+		teamTextField2.addFocusListener(new FocusListener() {
 
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				if (txtPlayer1.getText().equalsIgnoreCase("Player 1")) {
-					txtPlayer1.setText("");
+				if (teamTextField.getText().equalsIgnoreCase("Team Name")) {
+					teamTextField.setText("");
+					addButton.setEnabled(false);
 				}
-				txtPlayer1.setForeground(Color.BLACK);
-			}
 
-			@Override
-			public void focusLost(FocusEvent arg0) {		
-				if (txtPlayer1.getText().equalsIgnoreCase("")) { 
-					txtPlayer1.setForeground(Color.GRAY);
-					txtPlayer1.setText("Player 1");
-
-				}
-			}
-		});
-		playersPanel.add(txtPlayer1);
-		txtPlayer1.setColumns(10);
-
-		txtPlayer2 = new JTextField();
-		txtPlayer2.setText("Player 2");
-		txtPlayer2.setForeground(Color.GRAY);
-		txtPlayer2.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				if (txtPlayer2.getText().equalsIgnoreCase("Player 2")) {
-					txtPlayer2.setText("");
-				}
-				txtPlayer2.setForeground(Color.BLACK);
-			}
-
-			@Override
-			public void focusLost(FocusEvent arg0) {		
-				if (txtPlayer2.getText().equalsIgnoreCase("")) { 
-					txtPlayer2.setForeground(Color.GRAY);
-					txtPlayer2.setText("Player 2");
-
-				}
-			}
-		});
-		txtPlayer2.setColumns(10);
-		playersPanel.add(txtPlayer2);
-
-		txtPlayer3 = new JTextField();
-		txtPlayer3.setText("Player 3");
-		txtPlayer3.setForeground(Color.GRAY);
-		txtPlayer3.setColumns(10);
-		txtPlayer3.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				if (txtPlayer3.getText().equalsIgnoreCase("Player 3")) {
-					txtPlayer3.setText("");
-				}
-				txtPlayer3.setForeground(Color.BLACK);
-			}
-
-			@Override
-			public void focusLost(FocusEvent arg0) {		
-				if (txtPlayer3.getText().equalsIgnoreCase("")) { 
-					txtPlayer3.setForeground(Color.GRAY);
-					txtPlayer3.setText("Player 3");
-
-				}
-			}
-		});
-		playersPanel.add(txtPlayer3);
-
-		txtPlayer4 = new JTextField();
-		txtPlayer4.setText("Player 4");
-		txtPlayer4.setForeground(Color.GRAY);
-		txtPlayer4.setColumns(10);
-		txtPlayer4.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				if (txtPlayer4.getText().equalsIgnoreCase("Player 4")) {
-					txtPlayer4.setText("");
-				}
-				txtPlayer4.setForeground(Color.BLACK);
-			}
-
-			@Override
-			public void focusLost(FocusEvent arg0) {		
-				if (txtPlayer4.getText().equalsIgnoreCase("")) { 
-					txtPlayer4.setForeground(Color.GRAY);
-					txtPlayer4.setText("Player 4");
-
-				}
-			}
-		});
-		playersPanel.add(txtPlayer4);
-
-		txtPlayer5 = new JTextField();
-		txtPlayer5.setText("Player 5");
-		txtPlayer5.setForeground(Color.GRAY);
-		txtPlayer5.setColumns(10);
-		txtPlayer5.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				if (txtPlayer5.getText().equalsIgnoreCase("Player 5")) {
-					txtPlayer5.setText("");
-				}
-				txtPlayer5.setForeground(Color.BLACK);
-			}
-
-			@Override
-			public void focusLost(FocusEvent arg0) {		
-				if (txtPlayer5.getText().equalsIgnoreCase("")) { 
-					txtPlayer5.setForeground(Color.GRAY);
-					txtPlayer5.setText("Player 5");
-
-				}
-			}
-		});
-		playersPanel.add(txtPlayer5);
-
-		separator_1 = new JSeparator();
-		separator_1.setPreferredSize(new Dimension(150, 12));
-		contentPane.add(separator_1, BorderLayout.EAST);
-
-		panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		panel.setPreferredSize(new Dimension(10, 60));
-		contentPane.add(panel, BorderLayout.SOUTH);
-
-		addButton = new JButton("Add");
-		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ON_CLOSE();
-				if (Main.getTEAM_COUNT() < Main.MAX_TEAMS) {
-					Main.showCreateTeamFrame();
-					Text.debug("Making new CreateTeamFrame");
+				else if (teamTextField.getText().equalsIgnoreCase("")) {
+					addButton.setEnabled(false);
 				}
 
 				else {
+					addButton.setEnabled(true);
+				}
+
+				teamTextField.setForeground(Color.BLACK);
+			}
+
+			@Override
+			public void focusLost(FocusEvent arg0) {		
+				if (teamTextField.getText().equalsIgnoreCase("")) { 
+					teamTextField.setForeground(Color.GRAY);
+					teamTextField.setText("Team Name");
+					addButton.setEnabled(false);
+				} 
+
+				else if (teamTextField.getText().equalsIgnoreCase("Team Name")) { 
+					addButton.setEnabled(false); 
+				}
+				else if (teamTextField2.getText().equalsIgnoreCase("Team Name")) { 
+					addButton.setEnabled(false); 
+				}
+				
+				else { 
+					addButton.setEnabled(true); 
+				}
+			}
+			
+		});
+		GridBagConstraints gbc_teamTextField2 = new GridBagConstraints();
+		gbc_teamTextField2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_teamTextField2.insets = new Insets(0, 0, 5, 5);
+		gbc_teamTextField2.gridx = 0;
+		gbc_teamTextField2.gridy = 1;
+		contentPane.add(teamTextField2, gbc_teamTextField2);
+
+		addButton = new JButton("Play");
+		GridBagConstraints gbc_addButton = new GridBagConstraints();
+		gbc_addButton.anchor = GridBagConstraints.EAST;
+		gbc_addButton.gridx = 1;
+		gbc_addButton.gridy = 3;
+		contentPane.add(addButton, gbc_addButton);
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ON_CLOSE();
+//				if (Main.getTEAM_COUNT() < Main.MAX_TEAMS) {
+//					Main.showCreateTeamFrame();
+//					Text.debug("Making new CreateTeamFrame");
+//				}
+
+//				else {
 					Main.setCUR_TEAM(-1);
 					Main.nextQuestion();
-				}
+//				}
 				dispose();
 			}
+
 		});
-		panel.add(addButton);
 	}
 
 	/**
 	 * Sends user input to Main for constructing teams.
 	 */
 	private void ON_CLOSE() {
-		ArrayList<String> playerNames = new ArrayList<String>();
+//		ArrayList<String> playerNames = new ArrayList<String>();
 
-		if (txtPlayer1.getText().equalsIgnoreCase("Player 1"));
-		else playerNames.add(txtPlayer1.getText());
-		if (txtPlayer2.getText().equalsIgnoreCase("Player 2"));
-		else playerNames.add(txtPlayer2.getText());
-		if (txtPlayer3.getText().equalsIgnoreCase("Player 3"));
-		else playerNames.add(txtPlayer3.getText());
-		if (txtPlayer4.getText().equalsIgnoreCase("Player 4"));
-		else playerNames.add(txtPlayer4.getText());
-		if (txtPlayer5.getText().equalsIgnoreCase("Player 5"));
-		else playerNames.add(txtPlayer5.getText());
+//		if (txtPlayer1.getText().equalsIgnoreCase("Player 1"));
+//		else playerNames.add(txtPlayer1.getText());
+//		if (txtPlayer2.getText().equalsIgnoreCase("Player 2"));
+//		else playerNames.add(txtPlayer2.getText());
+//		if (txtPlayer3.getText().equalsIgnoreCase("Player 3"));
+//		else playerNames.add(txtPlayer3.getText());
+//		if (txtPlayer4.getText().equalsIgnoreCase("Player 4"));
+//		else playerNames.add(txtPlayer4.getText());
+//		if (txtPlayer5.getText().equalsIgnoreCase("Player 5"));
+//		else playerNames.add(txtPlayer5.getText());
 
-		Main.addTeam(teamTextField.getText(), playerNames);
+		Main.addTeam(teamTextField.getText(), null);
+		Main.addTeam(teamTextField2.getText(), null);
 	}
 
 }

@@ -1,8 +1,12 @@
 package classes;
 
 import gui.AdminWindow;
+import gui.CreateQPFrame;
 import gui.CreateTeamFrame;
+import gui.LoadQPFrame;
 import gui.MenuFrame;
+import gui.NamePrompt;
+import gui.NewQuestionFrame;
 import gui.PlayWindow;
 import gui.loadQuestionFrame;
 
@@ -24,9 +28,8 @@ import obj.QuestionPack;
 import obj.Team;
 
 // TODO properly track team points/players
-// TODO interface for qpack/player input
-// TODO remove actionListener in LoadQuestionFrame
-// TODO make pretty
+// TODO revealAll and Conceal bug
+// TODO make pretty, add sounds
 
 public class Main {
 
@@ -45,7 +48,7 @@ public class Main {
 	public static long			DRAMATIC_PAUSE = 1000;	// in milliseconds	
 	public static String 		ADMIN_TITLE = "Administrator",
 			PLAY_TITLE = "Family Feud";	
-	public static File 			QUESTION_FILE = new File("dogs.txt");	
+	public static File 			QUESTION_FILE = new File("questions.txt");	
 	public static Dimension 	MENU_DIM = new Dimension(800, 600),
 			PLAY_DIM = new Dimension(1024, 768),
 			ADMIN_DIM = new Dimension(480, 300);
@@ -53,6 +56,7 @@ public class Main {
 
 	/* Private Variable */
 	private static QuestionPack qpack;						// collection of questions
+	private static ArrayList<QuestionPack> qpacks;
 	private static Team[] 		teams = new Team[MAX_TEAMS];
 	private static Question 	cur_question;				// current question sent by QuestionPack
 	private static int 			cur_question_num, 
@@ -61,7 +65,9 @@ public class Main {
 	cur_player,					// slot indices for arrays
 	cur_turn,					// turn count
 	cur_points,
-	team_count;					// number of teams in Team[]
+	team_count,					// number of teams in Team[]
+	fm_cur_question;			// current Fast Money slot in int[] selections
+	private static int[]		selections;		// array of questions used during Fast Money
 	private static JFrame 		title, 
 	menu;
 	private static AdminWindow 	aw;
@@ -74,11 +80,11 @@ public class Main {
 	//TODO absolute layout for components
 	//TODO startup interface
 	public static void main(String[] args) throws FileNotFoundException {
-		if (DEBUG) { 	// skip menu            
-			playGame();
-		} else {
-			showMenu();
-		}
+		//		if (DEBUG) { 	// skip menu            
+		//			playGame();
+		//		} else {
+		showMenu();
+		//		}
 	}
 
 	/* Setup methods */
@@ -96,7 +102,35 @@ public class Main {
 	}
 
 	public static void showLoadQuestionPackWindow() {
+		Text.debug("Showing LoadQuestionPackFrame");
+		LoadQPFrame frame = new LoadQPFrame(qpacks);
+		frame.setVisible(true);
+	}
 
+	public static void showLoadQuestionWindow() {
+		Text.debug("Showing LoadQuestionFrame");
+
+	}
+
+	public static void showPacknamePrompt() {
+		Text.debug("Showing NamePrompt");
+		NamePrompt prompt = new NamePrompt();
+		prompt.setVisible(true);
+	}
+
+	public static void showCreateQuestionPackWindow(String packname, ArrayList<Question> questions) {
+		Text.debug("Showing CreateQuestionPackFrame");
+		if (qpack == null) {
+			qpack = new QuestionPack(packname, questions);
+		}
+		CreateQPFrame frame = new CreateQPFrame(qpack);
+		frame.setVisible(true);
+	}
+
+	public static void showCreateQuestionWindow() {
+		Text.debug("Showing NewQuestionFrame");
+		NewQuestionFrame frame = new NewQuestionFrame();
+		frame.setVisible(true);
 	}
 
 	/**
@@ -154,84 +188,106 @@ public class Main {
 	 * @throws InterruptedException TODO run in a separate thread
 	 */
 	private static void loadQuestions() throws FileNotFoundException {
+		qpacks = new ArrayList<QuestionPack>();
 		Scanner fileSC = new Scanner(QUESTION_FILE);
-		String packname, qText, aText;
+		String packname = null, 
+				qText, 
+				aText;
 		ArrayList<Question> questions = new ArrayList<Question>();
 		ArrayList<Answer> answers;
 		int aPoints;
 		boolean foundPack = false;
 
-		if (DEBUG) {
-			packname = "dogs";
-		} else {
-			Text.out("Question Pack name: ");
-			packname = (new Scanner(System.in)).nextLine();
-		}
+		//		if (DEBUG) {
+		//			packname = "dogs";
+		//		} else {
+		//			Text.out("Question Pack name: ");
+		//			packname = (new Scanner(System.in)).nextLine();
+		//		}
+		//		}
+
 
 		String str = fileSC.nextLine();
-		Text.debug("Loading Question Pack '" + packname + "'");
+		//		Text.debug("Loading Question Pack '" + packname + "'");
 		while (fileSC.hasNextLine() && !str.equalsIgnoreCase("END")) {
 			if (str.contains("PACK::")) {
 				String[] packInfo = str.split("PACK::");
 				Text.debug("Pack = " + packInfo[1]);
-				if (packInfo[1].equalsIgnoreCase("'" + packname + "'")) { 			// if: pack is found
-					foundPack = true;
+				packname = packInfo[1];
+				//				if (packInfo[1].equalsIgnoreCase("'" + packname + "'")) { 			// if: pack is found
+				foundPack = true;
+				str = fileSC.nextLine();
+				Text.debug("Found pack");
+
+				while (str.contains("Q::")) {								// while: questions remain
+					String[] qInfo = str.split("Q::");						// prepare questions and answers
+					qText = qInfo[1];
 					str = fileSC.nextLine();
-					Text.debug("Found pack");
-
-					while (str.contains("Q::")) {								// while: questions remain
-						String[] qInfo = str.split("Q::");						// prepare questions and answers
-						qText = qInfo[1];
+					answers = new ArrayList<Answer>();						// answers for current question
+					Text.debug("Question = " + qText + " {");
+					for (int j = 0; str.contains("A::") && j < MAX_ANSWERS; j++) {				// load all answers
+						String[] aInfo = str.split("A::");
+						str = aInfo[1];
+						aInfo = str.split("=");
+						aText = aInfo[0];
+						aPoints = Integer.parseInt(aInfo[1]);
+						answers.add(new Answer(aText, aPoints));
 						str = fileSC.nextLine();
-						answers = new ArrayList<Answer>();						// answers for current question
-						Text.debug("Question = " + qText + " {");
-						for (int j = 0; str.contains("A::") && j < MAX_ANSWERS; j++) {				// load all answers
-							String[] aInfo = str.split("A::");
-							str = aInfo[1];
-							aInfo = str.split("=");
-							aText = aInfo[0];
-							aPoints = Integer.parseInt(aInfo[1]);
-							answers.add(new Answer(aText, aPoints));
-							str = fileSC.nextLine();
-							Text.debug("\tAnswer = " + aText + ", " + aPoints + "%");
-						}
-
-						if (str.equalsIgnoreCase("END")) {
-							Text.debug(str);
-						};
-						questions.add(new Question(qText, answers));
-						Text.debug("Question '" + qText + "' added\n}\n");
+						Text.debug("\tAnswer = " + aText + ", " + aPoints + "%");
 					}
 
-				} else if (fileSC.hasNextLine()) {
-					str = fileSC.nextLine();
+					//					if (str.equalsIgnoreCase("END")) {
+					//						Text.debug(str);
+					//					}
+					questions.add(new Question(qText, answers));
+					Text.debug("Question '" + qText + "' added\n}\n");
 				}
-			} else {
-				str = fileSC.nextLine();
-			}
-		}
+				Text.debug(str);
+				qpacks.add(new QuestionPack(packname, questions));
+				Text.debug("Adding QPACK::" + packname);
+				questions = new ArrayList<Question>();
+				cur_question_num = 0;
 
-		Text.debug("str = " + str);
-		if (foundPack) {
-			qpack = new QuestionPack(packname, questions);
-			cur_question_num = 0;
-		} else {
-			Text.out(packname + " not found! Create a new pack named " + packname + "?\n[0] Yes\n[1] No");
-			int choice = Input.getInt(2);
-			if (choice == 0) {
-				QuestionPacker.makeQuestionPack(packname);
+				//			} else if (fileSC.hasNextLine()) {
+				//				str = fileSC.nextLine();
 			}
-			loadQuestions();
+			//			} else {
+			//				str = fileSC.nextLine();
+			//			}
+			Text.debug("str = " + str);
+			if (foundPack) {
+				//			qpack = new QuestiosnPack(packname, questions);
+				//				qpacks.add(new QuestionPack(packname, questions));
+				//				questions.clear();
+				//				cur_question_num = 0;
+				foundPack = false;
+				//				Text.debug("Adding QPACK::" + packname);
+			}
 		}
+		//		} else {
+		//			Text.out(packname + " not found! Create a new pack named " + packname + "?\n[0] Yes\n[1] No");
+		//			int choice = Input.getInt(2);
+		//			if (choice == 0) {
+		//				QuestionPacker.makeQuestionPack(packname);
+		//			}
+		//			loadQuestions();
+		//		}
 	}
+
 
 	/* END Setup methods */
 	public static void playGame() {
+
 		try {
 			loadQuestions();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+
+		for (int i=0; i<qpacks.size(); i++)
+			Text.debug(qpacks.get(i).name());
+
+		showLoadQuestionPackWindow();
 
 		//		if (DEBUG) { 		// cmd team input
 		//			Scanner sc = new Scanner(System.in);
@@ -247,10 +303,10 @@ public class Main {
 		//			cur_team = i;
 		//		}
 		//		}
-		Text.debug("cur_team=" + cur_team);
-		cur_team = 0;
-		team_count = 0;
-		showCreateTeamFrame();
+		//		Text.debug("cur_team=" + cur_team);
+		//		cur_team = 0;
+		//		team_count = 0;
+		//		showCreateTeamFrame();
 		//		total_questions = qpack.size();
 		//		cur_player = -1;
 		//		nextQuestion();
@@ -259,11 +315,11 @@ public class Main {
 	}
 
 	public static void showCreateTeamFrame() {		
-		if (cur_team < MAX_TEAMS) {
-			CreateTeamFrame frame = new CreateTeamFrame();
-			frame.setVisible(true);
-			Text.debug("cur_team=" + cur_team);
-		}
+		//		if (cur_team < MAX_TEAMS) {
+		CreateTeamFrame frame = new CreateTeamFrame();
+		frame.setVisible(true);
+		Text.debug("cur_team=" + cur_team);
+		//		}
 	}
 
 	/**
@@ -273,12 +329,20 @@ public class Main {
 	 */
 	public static void addTeam(String teamName, ArrayList<String> playerNames) {
 		Team t = new Team(teamName);
-		for (int i=0; i<playerNames.size(); i++) {
-			t.addPlayer(new Player(playerNames.get(i)));
-		}
-
+		//		for (int i=0; i<playerNames.size(); i++) {
+		//			t.addPlayer(new Player(playerNames.get(i)));
+		//		}
+		//
 		teams[team_count] = t;
 		team_count++;
+	}
+
+	/**
+	 * Called from CreateQuestionFrame.  Adds new question to new QuestionPack.
+	 * @param q
+	 */
+	public static void addQuestion(Question q) {
+		qpack.addQuestion(q);
 	}
 
 	private static void showAllQuestions() {
@@ -326,15 +390,29 @@ public class Main {
 	 * random, from QuestionPack. Sets up a new AdminWindow, if enabled.
 	 */
 	public static void nextQuestion() {
+		Text.debug("Loading next question");
 		cur_question_num++;
-		awardPoints();
-		updateTeamPoints();
 
 		if (qpack.size() == 0) {
 			declareWinner();
 		} 
+		else if (qpack.size() == 5) {
+			setFAST_MONEY();
+			Main.newQuestion(selections[fm_cur_question]);
+			Text.debug("EENT");
+		}
+
+		else if (FAST_MONEY) {
+			if (fm_cur_question == selections.length) {
+				fm_cur_question = 0;
+			}
+			Main.newQuestion(selections[fm_cur_question]);
+			Text.debug("EENT EENT");
+		}
 
 		else {
+			awardPoints();
+			updateTeamPoints();
 			cur_team = -1;
 			cur_points = 0;		// reset points between questions
 
@@ -342,8 +420,13 @@ public class Main {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
-						loadQuestionFrame frame = new loadQuestionFrame(qpack);
-						frame.setVisible(true);
+						if (FAST_MONEY) {
+
+						}
+						else {
+							loadQuestionFrame frame = new loadQuestionFrame(qpack);
+							frame.setVisible(true);
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -352,10 +435,16 @@ public class Main {
 		}
 	}
 
+
 	/** 
 	 * Sets up a new AdminFrame and PlayFrame, based on user selection.
 	 */
 	public static void newQuestion(int selection) {
+		if (FAST_MONEY) { 		// if: during Fast Money mode
+			selection = selections[fm_cur_question];
+			fm_cur_question++;
+			Text.debug("Setting " + selection);
+		}
 		cur_question = qpack.getQuestion(selection);
 		makePlayWindow();
 		makeAdminWindow();
@@ -430,7 +519,7 @@ public class Main {
 				addPoints(ansPoints); 
 			}
 		} 
-		
+
 		else {
 			pw.storeAnswer(ansText, slot);
 			nextQuestion();
@@ -546,6 +635,23 @@ public class Main {
 	 * Called from LoadQuestionFrame.  Begins Fast Money mode.
 	 */
 	public static void setFAST_MONEY() {
+		Text.debug("Entering Fast Money mode");
 		FAST_MONEY = true;
 	}
+
+	/**
+	 * Called from LoadQPFrame. Sets question pack to use in this game.
+	 */
+	public static void setQPack(QuestionPack questionPack) {
+		qpack = questionPack;	
+	}
+
+	public static void setFMSelections(int[] selections) {
+		Main.selections = selections;
+	}
+	
+	public static int getFM_cur_question() {
+		return fm_cur_question;
+	}
+
 }

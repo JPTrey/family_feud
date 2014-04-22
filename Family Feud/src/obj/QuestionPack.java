@@ -22,7 +22,9 @@ public class QuestionPack {
 	
 	public Question getQuestion(int selection) {
 		Question		q = questions.get(selection);
-		questions.remove(selection);
+		if (!Main.FAST_MONEY) {
+			questions.remove(selection);
+		}
 		
 		return q;
 	}
@@ -51,5 +53,19 @@ public class QuestionPack {
 		if (Main.DEBUG) { 
 			for (int i=0; i<questions.size(); i++) { Text.out(questions.get(i).getText()); }
 		} 
+	}
+
+	/**
+	 * Called from NewQuestionFrame.
+	 * @param q
+	 */
+	public void addQuestion(Question q) {
+		questions.add(q);
+		
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }
