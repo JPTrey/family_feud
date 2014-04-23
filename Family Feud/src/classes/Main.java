@@ -27,14 +27,15 @@ import obj.Question;
 import obj.QuestionPack;
 import obj.Team;
 
-// TODO properly track team points/players
-// TODO revealAll and Conceal bug
+// TODO properly track team points, question count
 // TODO make pretty, add sounds
+// TODO announce winner!
+// TODO beta test
 
 public class Main {
 
 	/* Global Variables */
-	public static boolean 		DEBUG = true,			// true: debug methods and statements will be shown
+	public static boolean 		DEBUG = false,			// true: debug methods and statements will be shown
 			ALT_EVERY_TURN = false,	// true: team mate switched after every answer 
 			FAST_MONEY = false;		
 	public static int 			DEBUG_WAIT = 50,		// used for debug output; controls rate of String output (in milliseconds)
@@ -59,6 +60,7 @@ public class Main {
 	private static ArrayList<QuestionPack> qpacks;
 	private static Team[] 		teams = new Team[MAX_TEAMS];
 	private static Question 	cur_question;				// current question sent by QuestionPack
+	private static boolean 		fm_player2 = false;					// true: player 2 is playing Fast Money
 	private static int 			cur_question_num, 
 	total_questions,			
 	cur_team, 
@@ -392,27 +394,48 @@ public class Main {
 	public static void nextQuestion() {
 		Text.debug("Loading next question");
 		cur_question_num++;
+		if (!FAST_MONEY) {
+			awardPoints();
+			updateTeamPoints();
+		}
 
 		if (qpack.size() == 0) {
 			declareWinner();
 		} 
+
+		else if (FAST_MONEY) {
+			if (fm_cur_question == selections.length && !fm_player2) {
+				fm_cur_question = 0;
+				fm_player2 = true;
+				Text.debug("setting fm_player2 = true");
+				
+				Main.newQuestion(selections[fm_cur_question]);
+				Text.debug("Setting up Fast Money question # " + fm_cur_question);
+			}
+			
+			else if (fm_cur_question == selections.length && fm_player2) {
+				// do nothing!
+				Text.debug("I ain't doin' shit!");
+			}
+			
+			else {
+				Main.newQuestion(selections[fm_cur_question]);
+				Text.debug("Setting up Fast Money question # " + fm_cur_question);
+			}
+			
+		}
+		
 		else if (qpack.size() == 5) {
 			setFAST_MONEY();
+			selections = new int[5];
+			for (int i=0; i<selections.length; i++) {
+				selections[i] = (i);
+			}
 			Main.newQuestion(selections[fm_cur_question]);
 			Text.debug("EENT");
 		}
 
-		else if (FAST_MONEY) {
-			if (fm_cur_question == selections.length) {
-				fm_cur_question = 0;
-			}
-			Main.newQuestion(selections[fm_cur_question]);
-			Text.debug("EENT EENT");
-		}
-
 		else {
-			awardPoints();
-			updateTeamPoints();
 			cur_team = -1;
 			cur_points = 0;		// reset points between questions
 
@@ -471,7 +494,7 @@ public class Main {
 			teams[cur_team].addStrike();
 			if (teams[cur_team].checkStrikes()) { 	// if: team has too many strikes
 				switchTeams();
-				pw.switchTeamLabel();
+				pw.switchTeamLabel(cur_team);
 				aw.switchTeamLabel();
 			}
 
@@ -493,7 +516,7 @@ public class Main {
 			cur_team = 0;
 		}
 
-		pw.switchTeamLabel();
+		pw.switchTeamLabel(cur_team);
 	}
 
 	/* 
@@ -501,7 +524,7 @@ public class Main {
 	 */
 	public static void setTeamButtonAction(int cur_team) {
 		setCUR_TEAM(cur_team);
-		pw.switchTeamLabel();
+		pw.switchTeamLabel(cur_team);
 		//		pw.switchPlayerLabel(Main.getCUR_PLAYER_NAME());
 	}
 
@@ -513,16 +536,9 @@ public class Main {
 	 * @param solved set to false if revealAll is clicked.  Points are not awarded.
 	 */
 	public static void revealAnswer(String ansText, int ansPoints, int slot, boolean solved) {
-		if (!FAST_MONEY) {
-			pw.revealAnswer(ansText, slot);
-			if (solved) {
-				addPoints(ansPoints); 
-			}
-		} 
-
-		else {
-			pw.storeAnswer(ansText, slot);
-			nextQuestion();
+		pw.revealAnswer(ansText, slot);
+		if (solved) {
+			addPoints(ansPoints); 
 		}
 	}
 
@@ -531,6 +547,7 @@ public class Main {
 	//	}
 	public static void endGame() {
 		declareWinner();
+		EXIT();
 	}
 
 	public static void EXIT() {
@@ -614,6 +631,24 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Sets the Fast Money team to whichever team has more points.
+	 */
+	public static void setFM_TEAM() {
+		if (teams[0].getPoints() > teams[1].getPoints()) {
+			cur_team = 0;
+		}
+		
+		else if (teams[0].getPoints() < teams[1].getPoints()) {
+			cur_team = 1;
+		}
+		
+		else {
+			// IT'S A TIE!!
+		}
+		
+		pw.setTeamLabel(cur_team);
+	}
 
 	public static int getCUR_QUESTION_NUM() {
 		return cur_question_num;
@@ -637,6 +672,7 @@ public class Main {
 	public static void setFAST_MONEY() {
 		Text.debug("Entering Fast Money mode");
 		FAST_MONEY = true;
+		setFM_TEAM();
 	}
 
 	/**
@@ -649,7 +685,7 @@ public class Main {
 	public static void setFMSelections(int[] selections) {
 		Main.selections = selections;
 	}
-	
+
 	public static int getFM_cur_question() {
 		return fm_cur_question;
 	}

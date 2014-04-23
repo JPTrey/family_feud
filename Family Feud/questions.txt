@@ -38,4 +38,8 @@ Q::"Greatest Basketball Player"
 Q::"Poop Colors"
 	A::"Brown"=99
 	A::"Green"=1
+Q::"Kanye West raps over the sounds of:"
+	A::"Kanye West"=44
+	A::"Children's Laughter"=30
+	A::"An Inferiority Complex"=22
 END	

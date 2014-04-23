@@ -103,6 +103,7 @@ public class loadQuestionFrame extends JFrame {
 		fastMoneyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Main.setFAST_MONEY();
+				Main.setFM_TEAM();
 				setTitle("Select Five Questions");
 				questList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 

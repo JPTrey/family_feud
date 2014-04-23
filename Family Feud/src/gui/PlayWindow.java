@@ -389,7 +389,7 @@ public class PlayWindow extends JFrame {
 //		mainPanel.setVisible(true);
 	}
 
-	public void switchTeamLabel() { frame.switchTeam(); }
+	public void switchTeamLabel(int cur_team) { frame.setCurrentTeam(cur_team);; }
 	public void setTeamLabel(int team) { frame.setCurrentTeam(team); }
 //	public void switchPlayerLabel(String s) { frame.setCurrentPlayer(s); }
 	
