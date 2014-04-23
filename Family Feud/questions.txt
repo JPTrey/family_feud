@@ -35,9 +35,14 @@ Q::"Greatest Basketball Player"
 	A::"LeBron James"=11
 	A::"Kobe Bryant"=10
 	A::"Kevin Durant"=9
-Q::"Poop Colors"
-	A::"Brown"=99
-	A::"Green"=1
+Q::"Car Colors"
+	A::"Brown"=68
+	A::"Green"=30
+	A::"Prune"=2
+Q::"JP Nicknames:"
+	A::"Pope"=50
+	A::"Jay Pay"=25
+	A::"The Big Fundamental"=25
 Q::"Kanye West raps over the sounds of:"
 	A::"Kanye West"=44
 	A::"Children's Laughter"=30

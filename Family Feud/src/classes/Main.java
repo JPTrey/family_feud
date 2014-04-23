@@ -8,13 +8,19 @@ import gui.MenuFrame;
 import gui.NamePrompt;
 import gui.NewQuestionFrame;
 import gui.PlayWindow;
+import gui.WinnerFrame;
 import gui.loadQuestionFrame;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
@@ -28,6 +34,9 @@ import obj.QuestionPack;
 import obj.Team;
 
 // TODO properly track team points, question count
+// TODO delete qpacks, add to file
+// TODO border
+// TODO grey out duplicates
 // TODO make pretty, add sounds
 // TODO announce winner!
 // TODO beta test
@@ -309,7 +318,6 @@ public class Main {
 		//		cur_team = 0;
 		//		team_count = 0;
 		//		showCreateTeamFrame();
-		//		total_questions = qpack.size();
 		//		cur_player = -1;
 		//		nextQuestion();
 		//		while (qpack.hasNext()) {;
@@ -383,6 +391,18 @@ public class Main {
 
 	private static void declareWinner() {
 		Text.debug(cur_team + " wins!!");
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					WinnerFrame frame = new WinnerFrame();
+					frame.setVisible(true);
+					frame.setWinnerText(teams[cur_team].getName() + " Wins!");
+//					frame.setWinnerPoints("Total Points: " + teams[cur_team].getPoints());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	// TODO enable loading second question onwards
@@ -408,21 +428,26 @@ public class Main {
 				fm_cur_question = 0;
 				fm_player2 = true;
 				Text.debug("setting fm_player2 = true");
-				
+
 				Main.newQuestion(selections[fm_cur_question]);
 				Text.debug("Setting up Fast Money question # " + fm_cur_question);
 			}
-			
+
 			else if (fm_cur_question == selections.length && fm_player2) {
-				// do nothing!
-				Text.debug("I ain't doin' shit!");
+				Text.debug("Awarding Fast Money points");
+				awardPoints();
+				updateTeamPoints();
 			}
-			
+
 			else {
 				Main.newQuestion(selections[fm_cur_question]);
 				Text.debug("Setting up Fast Money question # " + fm_cur_question);
 			}
-			
+
+		}
+
+		else if (teams[0].getPoints() >= 300 || teams[1].getPoints() >= 300) {
+			setFAST_MONEY();
 		}
 		
 		else if (qpack.size() == 5) {
@@ -536,6 +561,14 @@ public class Main {
 	 * @param solved set to false if revealAll is clicked.  Points are not awarded.
 	 */
 	public static void revealAnswer(String ansText, int ansPoints, int slot, boolean solved) {
+		// play sound
+		try {
+			AudioClip clip = Applet.newAudioClip(new URL("file://wav/ff-strike3.wav"));
+			clip.play();
+		} catch (MalformedURLException murle) {
+			System.out.println(murle);
+		}
+
 		pw.revealAnswer(ansText, slot);
 		if (solved) {
 			addPoints(ansPoints); 
@@ -547,7 +580,6 @@ public class Main {
 	//	}
 	public static void endGame() {
 		declareWinner();
-		EXIT();
 	}
 
 	public static void EXIT() {
@@ -638,15 +670,16 @@ public class Main {
 		if (teams[0].getPoints() > teams[1].getPoints()) {
 			cur_team = 0;
 		}
-		
+
 		else if (teams[0].getPoints() < teams[1].getPoints()) {
 			cur_team = 1;
 		}
-		
+
 		else {
-			// IT'S A TIE!!
+			cur_team = new Random().nextInt(1);
 		}
-		
+
+		Text.debug("Cur_Team = " + cur_team);
 		pw.setTeamLabel(cur_team);
 	}
 
@@ -672,6 +705,8 @@ public class Main {
 	public static void setFAST_MONEY() {
 		Text.debug("Entering Fast Money mode");
 		FAST_MONEY = true;
+		cur_question_num = 0;
+		total_questions = 10;
 		setFM_TEAM();
 	}
 
@@ -680,6 +715,7 @@ public class Main {
 	 */
 	public static void setQPack(QuestionPack questionPack) {
 		qpack = questionPack;	
+		total_questions = qpack.size();
 	}
 
 	public static void setFMSelections(int[] selections) {

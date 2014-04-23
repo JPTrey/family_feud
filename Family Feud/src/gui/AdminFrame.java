@@ -17,6 +17,7 @@ import classes.Text;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 // TODO end game after all answers have been logged
 
@@ -60,7 +61,7 @@ public class AdminFrame extends JFrame {
 	public AdminFrame() {
 		setTitle("Family Feud - Admin");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 500, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -93,6 +94,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.setLayout(new GridLayout(5, 2, 0, 0));
 
 		ansButton1 = new JButton();
+		ansButton1.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton1.setEnabled(false);
@@ -122,6 +124,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton1);
 
 		ansButton6 = new JButton();
+		ansButton6.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ansButton6.setEnabled(false);
@@ -151,6 +154,7 @@ public class AdminFrame extends JFrame {
 
 
 		ansButton2 = new JButton();
+		ansButton2.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton2.setEnabled(false);
@@ -178,6 +182,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton2);
 
 		ansButton7 = new JButton();
+		ansButton7.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton7.setEnabled(false);
@@ -203,6 +208,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton7);
 
 		ansButton3 = new JButton();
+		ansButton3.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton3.setEnabled(false);
@@ -228,6 +234,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton3);
 
 		ansButton8 = new JButton();
+		ansButton8.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton8.setEnabled(false);
@@ -253,6 +260,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton8);
 
 		ansButton4 = new JButton();
+		ansButton4.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton4.setEnabled(false);
@@ -278,6 +286,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton4);
 
 		ansButton9 = new JButton();
+		ansButton9.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton9.setEnabled(false);
@@ -303,6 +312,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton9);
 
 		ansButton5 = new JButton();
+		ansButton5.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton5.setEnabled(false);
@@ -327,6 +337,7 @@ public class AdminFrame extends JFrame {
 		ansPanel.add(ansButton5);
 
 		ansButton10 = new JButton("New button");
+		ansButton10.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		ansButton10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ansButton10.setEnabled(false);
@@ -459,6 +470,8 @@ public class AdminFrame extends JFrame {
 			team1Button.setEnabled(false);
 			team2Button.setEnabled(false);
 			teamLabel.setText(Main.getCUR_TEAM_NAME() + " Controls");
+			questCountLabel.setText("Question " + Main.getCUR_QUESTION_NUM() +
+					" of " + Main.getTOTAL_QUESTIONS());
 		}
 
 		switch (q.answerCount()) {				// assign a button for each answer
