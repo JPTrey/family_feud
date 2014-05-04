@@ -212,7 +212,7 @@ public class PlayFrame extends JFrame {
 		ansCol15.setBounds(new Rectangle(0, 0, 100, 0));
 		ansPanel.add(ansCol15);
 		ansCol15.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		if (!Main.FAST_MONEY && ansCount >= 1) {
 			ansLabel1.setText("1"); 	
 		}
@@ -323,63 +323,63 @@ public class PlayFrame extends JFrame {
 			ansLabel10.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 9:		ansLabel9.setText(ansText); 
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel9.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel9.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 8:		ansLabel8.setText(ansText); 
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel8.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel8.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 7: 	ansLabel7.setText(ansText); 
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel7.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel7.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 6:		ansLabel6.setText(ansText); 
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel6.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel6.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 5:		ansLabel5.setText(ansText);
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel5.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel5.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 4:		ansLabel4.setText(ansText); 
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel4.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel4.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 3:		ansLabel3.setText(ansText); 
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel3.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel3.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 2:		ansLabel2.setText(ansText); 
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel2.setFont(new Font("Wide Latin", Font.PLAIN, 70));
 			ansLabel2.setForeground(Color.RED);
 		}
 		break;
-		
+
 		case 1:		ansLabel1.setText(ansText);
 		if (ansText.equalsIgnoreCase("X")) {
 			ansLabel1.setFont(new Font("Wide Latin", Font.PLAIN, 70));
@@ -412,7 +412,6 @@ public class PlayFrame extends JFrame {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

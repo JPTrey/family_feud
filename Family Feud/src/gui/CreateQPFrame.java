@@ -89,14 +89,32 @@ public class CreateQPFrame extends JFrame {
 		gbc_btnNewButton.gridy = 1;
 		panel.add(btnNewButton, gbc_btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("Play");
+		JButton btnNewButton_1 = new JButton("Save & Play");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Main.setQPack(qpack); 
+//				Main.saveQPack();
 				Main.showCreateTeamFrame();
 				dispose();
 			}
 		});
+		
+		JButton btnSave = new JButton("Save & Quit");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Main.setQPack(qpack); 
+//				Main.saveQPack();
+				Main.showLoadQuestionPackWindow();
+				dispose();
+			}
+		});
+		btnSave.setEnabled(false);
+		GridBagConstraints gbc_btnSave = new GridBagConstraints();
+		gbc_btnSave.anchor = GridBagConstraints.EAST;
+		gbc_btnSave.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSave.gridx = 0;
+		gbc_btnSave.gridy = 6;
+		panel.add(btnSave, gbc_btnSave);
 		btnNewButton_1.setEnabled(false);
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
 		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 0);
@@ -107,6 +125,7 @@ public class CreateQPFrame extends JFrame {
 		
 		if (qpack.size() > 0) {
 			btnNewButton_1.setEnabled(true);
+			btnSave.setEnabled(true);
 		}
 	}
 

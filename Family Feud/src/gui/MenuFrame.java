@@ -105,12 +105,13 @@ public class MenuFrame extends JFrame {
 		});
 		contentPane.add(button, "1, 4, center, top");
 		
-		JButton btnStartGame = new JButton("How to Play");
-		btnStartGame.addActionListener(new ActionListener() {
+		JButton newButton = new JButton("Create New");
+		newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Main.showPacknamePrompt();
 			}
 		});
-		contentPane.add(btnStartGame, "1, 8, center, top");
+		contentPane.add(newButton, "1, 8, center, top");
 		
 		JButton btnAbout = new JButton("About");
 		contentPane.add(btnAbout, "1, 12, center, top");

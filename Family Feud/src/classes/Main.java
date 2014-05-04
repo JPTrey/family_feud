@@ -11,14 +11,14 @@ import gui.PlayWindow;
 import gui.WinnerFrame;
 import gui.loadQuestionFrame;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -32,6 +32,7 @@ import obj.Player;
 import obj.Question;
 import obj.QuestionPack;
 import obj.Team;
+import sound.Sound;
 
 // TODO properly track team points, question count
 // TODO delete qpacks, add to file
@@ -85,12 +86,18 @@ public class Main {
 	private static PlayWindow 	pw;
 	private static JMenuBar 	menubar;
 	private static Scanner 		sc = new Scanner(System.in);
+	private static Sound		theme = new Sound("FamilyFeud-Theme.wav"),
+			blip = new Sound("FamilyFeud-Blip.wav"),
+			bell = new Sound("FamilyFeud-Bell.wav"),
+			strike = new Sound("ff-strike3.wav"),
+			dup = new Sound("FamilyFeud-Buzzer1.wav");
 
 	//TODO end after all questions
 	//TODO make pretty
 	//TODO absolute layout for components
 	//TODO startup interface
 	public static void main(String[] args) throws FileNotFoundException {
+
 		//		if (DEBUG) { 	// skip menu            
 		//			playGame();
 		//		} else {
@@ -285,6 +292,33 @@ public class Main {
 		//		}
 	}
 
+	/**
+	 * Writes QPack to file.
+	 * @param qpack
+	 */
+	public static void saveQPack() {
+		qpacks.add(qpack);
+		
+		try {
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("questions2.txt", true)));
+
+			// write Question
+			for (int i=0; i<qpack.size(); i++) {
+				out.println(qpack.getQuestion(i).getText());
+
+				// Write Answers
+				for (int j=0; j<qpack.getQuestion(i).answerCount(); j++) {
+					out.println(qpack.getQuestion(i).getAnswers().get(j).getText() + "=" + 
+							qpack.getQuestion(i).getAnswers().get(j).getPoints());
+				}
+			}
+			out.close();
+		} catch (IOException e) {
+			//exception handling left as an exercise for the reader
+		}
+
+	}
+
 
 	/* END Setup methods */
 	public static void playGame() {
@@ -397,7 +431,7 @@ public class Main {
 					WinnerFrame frame = new WinnerFrame();
 					frame.setVisible(true);
 					frame.setWinnerText(teams[cur_team].getName() + " Wins!");
-//					frame.setWinnerPoints("Total Points: " + teams[cur_team].getPoints());
+					//					frame.setWinnerPoints("Total Points: " + teams[cur_team].getPoints());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -449,7 +483,7 @@ public class Main {
 		else if (teams[0].getPoints() >= 300 || teams[1].getPoints() >= 300) {
 			setFAST_MONEY();
 		}
-		
+
 		else if (qpack.size() == 5) {
 			setFAST_MONEY();
 			selections = new int[5];
@@ -513,6 +547,15 @@ public class Main {
 	}
 
 	public static void addStrike() {
+		Sound s = new Sound("FamilyFeud-Blip.wav");
+		s.play();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		s = new Sound("ff-strike3.wav");
+		s.play();
 		Text.debug("Strike added to Team" + cur_team);
 		if (cur_team != -1) {
 
@@ -562,22 +605,44 @@ public class Main {
 	 */
 	public static void revealAnswer(String ansText, int ansPoints, int slot, boolean solved) {
 		// play sound
-		try {
-			AudioClip clip = Applet.newAudioClip(new URL("file://wav/ff-strike3.wav"));
-			clip.play();
-		} catch (MalformedURLException murle) {
-			System.out.println(murle);
-		}
 
 		pw.revealAnswer(ansText, slot);
-		if (solved) {
+		if (solved && !FAST_MONEY) {
+			playSound("bell");
 			addPoints(ansPoints); 
 		}
 	}
 
-	//	public static void revealAnswer(Answer ans, int slot) {
-	//		pw.revealAnswer(ans.getText(), slot);
-	//	}
+	public static void playSound(String sound) {
+
+		if (sound.equalsIgnoreCase("reveal_bell")) {
+			//			bell.play();
+		}
+
+		else if (sound.equalsIgnoreCase("duplicate")) {
+			dup.play();
+		}
+
+		else {
+			blip.play();
+
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			if (sound.equalsIgnoreCase("strike")) {
+				strike.play();
+			}
+
+			else if (sound.equalsIgnoreCase("bell")) {
+				bell.play();
+			}
+
+		}
+	}
+
 	public static void endGame() {
 		declareWinner();
 	}
