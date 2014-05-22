@@ -724,6 +724,11 @@ public class SimpleSound{
     playback.start(); 
   }
   
+  public void stop() {
+	  playbacks = null;
+	  play();
+  }
+  
   /**
    * Creates a new Playback thread, starts it, then waits for the 
    * entire sound to finish playing before it returns.  This method 

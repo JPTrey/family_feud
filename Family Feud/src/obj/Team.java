@@ -13,6 +13,7 @@ public class Team {
 		this.name = name;
 		players = new ArrayList<Player>();
 		strikes = 0;
+		points = 0;
 	}
 
 	public boolean checkStrikes() {

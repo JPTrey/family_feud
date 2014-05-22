@@ -21,11 +21,16 @@ public class QuestionPack {
 	}
 	
 	public Question getQuestion(int selection) {
-		Question		q = questions.get(selection);
+		Question q = questions.get(selection);
 		if (!Main.FAST_MONEY) {
 			questions.remove(selection);
 		}
 		
+		return q;
+	}
+	
+	public Question exportQuestion(int selection) {
+		Question q = questions.get(selection);
 		return q;
 	}
 	

@@ -47,4 +47,12 @@ Q::"Kanye West raps over the sounds of:"
 	A::"Kanye West"=44
 	A::"Children's Laughter"=30
 	A::"An Inferiority Complex"=22
-END	
+PACK::'Questions'
+Q::"How are you?"
+	A::"Doin' good"=40
+	A::"Okay"=20
+	A::"Fantastic"=19
+	A::"Bad"=1
+Q::"What's my final grade?"
+	A::"A"=90
+	A::"F"=10

@@ -3,6 +3,7 @@ package classes;
 import gui.AdminWindow;
 import gui.CreateQPFrame;
 import gui.CreateTeamFrame;
+import gui.InputLongPrompt;
 import gui.LoadQPFrame;
 import gui.MenuFrame;
 import gui.NamePrompt;
@@ -24,6 +25,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
@@ -34,13 +36,11 @@ import obj.QuestionPack;
 import obj.Team;
 import sound.Sound;
 
-// TODO properly track team points, question count
-// TODO delete qpacks, add to file
-// TODO border
-// TODO grey out duplicates
-// TODO make pretty, add sounds
-// TODO announce winner!
-// TODO beta test
+// double points third round
+// back to menu
+// explicitly assign points
+// fix Fast Money points bug
+// JAR!!
 
 public class Main {
 
@@ -92,26 +92,26 @@ public class Main {
 			strike = new Sound("ff-strike3.wav"),
 			dup = new Sound("FamilyFeud-Buzzer1.wav");
 
-	//TODO end after all questions
-	//TODO make pretty
-	//TODO absolute layout for components
-	//TODO startup interface
 	public static void main(String[] args) throws FileNotFoundException {
 
 		//		if (DEBUG) { 	// skip menu            
 		//			playGame();
 		//		} else {
+//		theme.play();
 		showMenu();
 		//		}
 	}
 
 	/* Setup methods */
-	private static void showMenu() {
+	public static void showMenu() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					MenuFrame frame = new MenuFrame();
 					frame.setVisible(true);
+					if (qpacks == null) {
+						qpacks = new ArrayList<QuestionPack>();
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -120,6 +120,11 @@ public class Main {
 	}
 
 	public static void showLoadQuestionPackWindow() {
+		try {
+			loadQuestions();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		Text.debug("Showing LoadQuestionPackFrame");
 		LoadQPFrame frame = new LoadQPFrame(qpacks);
 		frame.setVisible(true);
@@ -151,10 +156,22 @@ public class Main {
 		frame.setVisible(true);
 	}
 
+	public static void showInputLongPrompt() {
+		try {
+			InputLongPrompt dialog = new InputLongPrompt();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Creates a new PlayWindow for each new question
 	 */
 	private static void makePlayWindow() {
+		theme = bell;
+		bell.play();
 		if (pw == null) {
 			pw = new PlayWindow(PLAY_TITLE, cur_question);
 		} else {
@@ -210,25 +227,20 @@ public class Main {
 		Scanner fileSC = new Scanner(QUESTION_FILE);
 		String packname = null, 
 				qText, 
-				aText;
+				aText,
+				str = null;
 		ArrayList<Question> questions = new ArrayList<Question>();
 		ArrayList<Answer> answers;
 		int aPoints;
 		boolean foundPack = false;
-
-		//		if (DEBUG) {
-		//			packname = "dogs";
-		//		} else {
-		//			Text.out("Question Pack name: ");
-		//			packname = (new Scanner(System.in)).nextLine();
-		//		}
-		//		}
-
-
-		String str = fileSC.nextLine();
-		//		Text.debug("Loading Question Pack '" + packname + "'");
-		while (fileSC.hasNextLine() && !str.equalsIgnoreCase("END")) {
-			if (str.contains("PACK::")) {
+		if (fileSC.hasNextLine()) {
+			str = fileSC.nextLine();
+		}
+		while (fileSC.hasNextLine()) {
+			if (str.isEmpty()) {
+				str = fileSC.nextLine();
+			}
+			else if (str.contains("PACK::")) {
 				String[] packInfo = str.split("PACK::");
 				Text.debug("Pack = " + packInfo[1]);
 				packname = packInfo[1];
@@ -250,7 +262,8 @@ public class Main {
 						aText = aInfo[0];
 						aPoints = Integer.parseInt(aInfo[1]);
 						answers.add(new Answer(aText, aPoints));
-						str = fileSC.nextLine();
+						if (fileSC.hasNextLine())
+							str = fileSC.nextLine();
 						Text.debug("\tAnswer = " + aText + ", " + aPoints + "%");
 					}
 
@@ -297,24 +310,34 @@ public class Main {
 	 * @param qpack
 	 */
 	public static void saveQPack() {
-		qpacks.add(qpack);
-		
-		try {
-			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("questions2.txt", true)));
+		Text.debug("qpacks size = " + qpacks.size());
+		Text.debug("qpack size = " + qpack.size());
+//		qpacks.add(qpack);
 
-			// write Question
+		try {
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("questions.txt", true)));
+
+			// write name
+			out.print("\nPACK::'" + qpack.name() + "'");
+			Text.debug("Writing packname");
+
+			// write all Question
 			for (int i=0; i<qpack.size(); i++) {
-				out.println(qpack.getQuestion(i).getText());
+				out.print("\nQ::\"" + qpack.exportQuestion(i).getText() + "\"");
+				Text.debug("Writing question: " + qpack.exportQuestion(i).getText());
+				Text.debug("i = " + i);
 
 				// Write Answers
-				for (int j=0; j<qpack.getQuestion(i).answerCount(); j++) {
-					out.println(qpack.getQuestion(i).getAnswers().get(j).getText() + "=" + 
-							qpack.getQuestion(i).getAnswers().get(j).getPoints());
+				for (int j=0; j<qpack.exportQuestion(i).answerCount(); j++) {
+					out.print("\n\tA::\"" + qpack.exportQuestion(i).getAnswers().get(j).getText() + "\"=" + 
+							qpack.exportQuestion(i).getAnswers().get(j).getPoints());
+					Text.debug("Writing answer: " + qpack.exportQuestion(i).getAnswers().get(j).getText());
 				}
 			}
 			out.close();
-		} catch (IOException e) {
-			//exception handling left as an exercise for the reader
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -322,12 +345,6 @@ public class Main {
 
 	/* END Setup methods */
 	public static void playGame() {
-
-		try {
-			loadQuestions();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 
 		for (int i=0; i<qpacks.size(); i++)
 			Text.debug(qpacks.get(i).name());
@@ -428,9 +445,15 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinnerFrame frame = new WinnerFrame();
-					frame.setVisible(true);
-					frame.setWinnerText(teams[cur_team].getName() + " Wins!");
+					if (cur_team != -1) {
+						WinnerFrame frame = new WinnerFrame();
+						frame.setVisible(true);
+						frame.setWinnerText(teams[cur_team].getName() + " Wins!");
+					}
+					
+					else {
+						EXIT();
+					}
 					//					frame.setWinnerPoints("Total Points: " + teams[cur_team].getPoints());
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -438,8 +461,6 @@ public class Main {
 			}
 		});
 	}
-
-	// TODO enable loading second question onwards
 
 	/**
 	 * Called after all answers have been revealed. Gets new question, at
@@ -780,7 +801,9 @@ public class Main {
 	 */
 	public static void setQPack(QuestionPack questionPack) {
 		qpack = questionPack;	
-		total_questions = qpack.size();
+		if (questionPack != null) {
+			total_questions = qpack.size();
+		}
 	}
 
 	public static void setFMSelections(int[] selections) {

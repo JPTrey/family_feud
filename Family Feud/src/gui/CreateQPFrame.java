@@ -78,6 +78,7 @@ public class CreateQPFrame extends JFrame {
 		JButton btnNewButton = new JButton("Add Question");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Main.setQPack(qpack);
 				Main.showCreateQuestionWindow();
 				dispose();
 			}
@@ -93,7 +94,7 @@ public class CreateQPFrame extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Main.setQPack(qpack); 
-//				Main.saveQPack();
+				Main.saveQPack();
 				Main.showCreateTeamFrame();
 				dispose();
 			}
@@ -103,8 +104,10 @@ public class CreateQPFrame extends JFrame {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Main.setQPack(qpack); 
-//				Main.saveQPack();
-				Main.showLoadQuestionPackWindow();
+				Main.saveQPack();
+				Main.setQPack(null);
+				Main.showMenu();
+//				Main.showLoadQuestionPackWindow();
 				dispose();
 			}
 		});

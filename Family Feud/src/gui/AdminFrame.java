@@ -392,6 +392,9 @@ public class AdminFrame extends JFrame {
 						Main.addStrike();
 						setStrikesLabel();
 					}
+					else {
+						Main.playSound("strike");
+					}
 				}
 			}
 		});
@@ -561,7 +564,7 @@ public class AdminFrame extends JFrame {
 				if (slot == 5) {
 					concealAll();
 				}
-				else if (slot > 5) {
+				else if (slot >= 5) {
 					Main.playSound("duplicate");
 				}
 			}
