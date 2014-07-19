@@ -46,51 +46,51 @@ public class Main {
 
 	/* Global Variables */
 	public static boolean 		DEBUG = false,			// true: debug methods and statements will be shown
-			ALT_EVERY_TURN = false,	// true: team mate switched after every answer 
-			FAST_MONEY = false;		
+								ALT_EVERY_TURN = false,	// true: team mate switched after every answer 
+								FAST_MONEY = false;		
 	public static int 			DEBUG_WAIT = 50,		// used for debug output; controls rate of String output (in milliseconds)
-			CHAR_WAIT = 0,			// used for text output; controls rate of character output (in milliseconds)
-			TEXT_WAIT = 0,			// used for text output; controls pause time when reading '~'
-			MAX_ANSWERS = 10,
-			MAX_TEAMS = 2,
-			MAX_TEAM_SIZE = 10,
-			MAX_STRIKES = 3,
-			POINTS_TO_WIN = 300;
+								CHAR_WAIT = 0,			// used for text output; controls rate of character output (in milliseconds)
+								TEXT_WAIT = 0,			// used for text output; controls pause time when reading '~'
+								MAX_ANSWERS = 10,
+								MAX_TEAMS = 2,
+								MAX_TEAM_SIZE = 10,
+								MAX_STRIKES = 3,
+								POINTS_TO_WIN = 300;
 	public static long			DRAMATIC_PAUSE = 1000;	// in milliseconds	
 	public static String 		ADMIN_TITLE = "Administrator",
-			PLAY_TITLE = "Family Feud";	
+								PLAY_TITLE = "Family Feud";	
 	public static File 			QUESTION_FILE = new File("questions.txt");	
 	public static Dimension 	MENU_DIM = new Dimension(800, 600),
-			PLAY_DIM = new Dimension(1024, 768),
-			ADMIN_DIM = new Dimension(480, 300);
+								PLAY_DIM = new Dimension(1024, 768),
+								ADMIN_DIM = new Dimension(480, 300);
 	public static ImageIcon 	BACKGROUND_ICON_IMG = new ImageIcon("FamilyFeudBoard.jpg");
 
 	/* Private Variable */
-	private static QuestionPack qpack;						// collection of questions
-	private static ArrayList<QuestionPack> qpacks;
-	private static Team[] 		teams = new Team[MAX_TEAMS];
-	private static Question 	cur_question;				// current question sent by QuestionPack
-	private static boolean 		fm_player2 = false;					// true: player 2 is playing Fast Money
-	private static int 			cur_question_num, 
-	total_questions,			
-	cur_team, 
-	cur_player,					// slot indices for arrays
-	cur_turn,					// turn count
-	cur_points,
-	team_count,					// number of teams in Team[]
-	fm_cur_question;			// current Fast Money slot in int[] selections
-	private static int[]		selections;		// array of questions used during Fast Money
-	private static JFrame 		title, 
-	menu;
-	private static AdminWindow 	aw;
-	private static PlayWindow 	pw;
-	private static JMenuBar 	menubar;
-	private static Scanner 		sc = new Scanner(System.in);
-	private static Sound		theme = new Sound("FamilyFeud-Theme.wav"),
-			blip = new Sound("FamilyFeud-Blip.wav"),
-			bell = new Sound("FamilyFeud-Bell.wav"),
-			strike = new Sound("ff-strike3.wav"),
-			dup = new Sound("FamilyFeud-Buzzer1.wav");
+	private static QuestionPack 			qpack;						// collection of questions
+	private static ArrayList<QuestionPack> 	qpacks;
+	private static Team[] 					teams = new Team[MAX_TEAMS];
+	private static Question 				cur_question;				// current question sent by QuestionPack
+	private static boolean 					fm_player2 = false;					// true: player 2 is playing Fast Money
+	private static int 						cur_question_num, 
+											total_questions,			
+											cur_team, 
+											cur_player,					// slot indices for arrays
+											cur_turn,					// turn count
+											cur_points,
+											team_count,					// number of teams in Team[]
+											fm_cur_question;			// current Fast Money slot in int[] selections
+	private static int[]					selections;		// array of questions used during Fast Money
+	private static JFrame 					title, 
+											menu;
+	private static AdminWindow 				aw;
+	private static PlayWindow 				pw;
+	private static JMenuBar 				menubar;
+	private static Scanner 					sc = new Scanner(System.in);
+	private static Sound					theme = new Sound("FamilyFeud-Theme.wav"),
+											blip = new Sound("FamilyFeud-Blip.wav"),
+											bell = new Sound("FamilyFeud-Bell.wav"),
+											strike = new Sound("ff-strike3.wav"),
+											dup = new Sound("FamilyFeud-Buzzer1.wav");
 
 	public static void main(String[] args) throws FileNotFoundException {
 
