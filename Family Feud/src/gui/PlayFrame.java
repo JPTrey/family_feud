@@ -188,7 +188,7 @@ public class PlayFrame extends JFrame {
 		questLabel.setText(q.getText());
 		setPoints(0);
 
-		// reset ansLabels between questions
+		// reset labels between questions
 		ansLabel1.setText(" ");
 		ansLabel2.setText(" ");
 		ansLabel3.setText(" ");
@@ -199,6 +199,10 @@ public class PlayFrame extends JFrame {
 		ansLabel8.setText(" ");
 		ansLabel9.setText(" ");
 		ansLabel10.setText(" ");
+		teamLabel1.setForeground(Color.WHITE); 
+		teamPoints1.setForeground(Color.WHITE);
+		teamLabel2.setForeground(Color.WHITE); 
+		teamPoints2.setForeground(Color.WHITE);
 
 		ansPanel = new JPanel();
 		ansPanel.setBackground(new Color(255, 165, 0));
@@ -308,6 +312,9 @@ public class PlayFrame extends JFrame {
 		ansCol610.add(ansLabel10);
 		ansLabel10.setHorizontalAlignment(SwingConstants.CENTER);
 
+		if (Main.FAST_MONEY) {
+			pointsLabel.setText("FAST MONEY!");
+		}
 	}
 
 	/**
@@ -422,6 +429,10 @@ public class PlayFrame extends JFrame {
 		pointsLabel.setText(Integer.toString(points));
 	}
 
+	public void setPointsAsText(String message) {
+		pointsLabel.setText(message);
+	}
+
 	public void setTeamName(String name, int team) {
 		if (team == 1) {
 			teamLabel1.setText(name);
@@ -491,13 +502,16 @@ public class PlayFrame extends JFrame {
 		default: break;
 		}
 	}
-
-	public void setCurrentPlayer(String playerName) {
-
-	}
-
-	public void switchTeam(int cur_team) {
-		// TODO grey out opposite team label
-
+	
+	public void removeTeamLabel(int team) {
+		if (team == 0) {
+			teamLabel1.setText("");
+			teamPoints1.setText("");
+		}
+		
+		else {
+			teamLabel2.setText("");
+			teamPoints2.setText("");
+		}	
 	}
 }

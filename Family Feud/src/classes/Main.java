@@ -36,70 +36,64 @@ import obj.QuestionPack;
 import obj.Team;
 import sound.Sound;
 
-// double points third round
-// back to menu
-// explicitly assign points
-// fix Fast Money points bug
-// JAR!!
+// JAR and relative URLs
+// test and debug
+// test on Windows
+// remove useless code/classes
 
 public class Main {
 
 	/* Global Variables */
-	public static boolean 		DEBUG = false,			// true: debug methods and statements will be shown
-								ALT_EVERY_TURN = false,	// true: team mate switched after every answer 
-								FAST_MONEY = false;		
-	public static int 			DEBUG_WAIT = 50,		// used for debug output; controls rate of String output (in milliseconds)
-								CHAR_WAIT = 0,			// used for text output; controls rate of character output (in milliseconds)
-								TEXT_WAIT = 0,			// used for text output; controls pause time when reading '~'
-								MAX_ANSWERS = 10,
-								MAX_TEAMS = 2,
-								MAX_TEAM_SIZE = 10,
-								MAX_STRIKES = 3,
-								POINTS_TO_WIN = 300;
+	public static boolean 		DEBUG = true,			// true: debug methods and statements will be shown
+			ALT_EVERY_TURN = false,	// true: team mate switched after every answer 
+			FAST_MONEY = false;		
+	public static int 			DEBUG_WAIT = 10,		// used for debug output; controls rate of String output (in milliseconds)
+			CHAR_WAIT = 0,			// used for text output; controls rate of character output (in milliseconds)
+			TEXT_WAIT = 0,			// used for text output; controls pause time when reading '~'
+			MAX_ANSWERS = 10,
+			MAX_TEAMS = 2,
+			MAX_TEAM_SIZE = 10,
+			MAX_STRIKES = 3,
+			POINTS_TO_WIN = 300,	// points required to enter Fast Money
+			POINTS_TO_WIN_FM = 200;
 	public static long			DRAMATIC_PAUSE = 1000;	// in milliseconds	
 	public static String 		ADMIN_TITLE = "Administrator",
-								PLAY_TITLE = "Family Feud";	
-	public static File 			QUESTION_FILE = new File("questions.txt");	
+			PLAY_TITLE = "Family Feud";	
+	public static File 			QUESTION_FILE = new File("./qpacks/questions.txt");	
 	public static Dimension 	MENU_DIM = new Dimension(800, 600),
-								PLAY_DIM = new Dimension(1024, 768),
-								ADMIN_DIM = new Dimension(480, 300);
+			PLAY_DIM = new Dimension(1024, 768),
+			ADMIN_DIM = new Dimension(480, 300);
 	public static ImageIcon 	BACKGROUND_ICON_IMG = new ImageIcon("FamilyFeudBoard.jpg");
 
 	/* Private Variable */
 	private static QuestionPack 			qpack;						// collection of questions
 	private static ArrayList<QuestionPack> 	qpacks;
 	private static Team[] 					teams = new Team[MAX_TEAMS];
-	private static Question 				cur_question;				// current question sent by QuestionPack
-	private static boolean 					fm_player2 = false;					// true: player 2 is playing Fast Money
+	private static Question 				cur_question;				// current question sent by QuestionPack; if == 3, double points
+	private static boolean 					fm_player2 = false;			// true: player 2 is playing Fast Money
 	private static int 						cur_question_num, 
-											total_questions,			
-											cur_team, 
-											cur_player,					// slot indices for arrays
-											cur_turn,					// turn count
-											cur_points,
-											team_count,					// number of teams in Team[]
-											fm_cur_question;			// current Fast Money slot in int[] selections
-	private static int[]					selections;		// array of questions used during Fast Money
+	total_questions,			
+	cur_team, 
+	cur_player,					// slot indices for arrays
+	cur_turn,					// turn count
+	cur_points,
+	team_count,					// number of teams in Team[]
+	fm_cur_question;			// current Fast Money slot in int[] selections
+	private static int[]					selections;					// array of questions used during Fast Money
 	private static JFrame 					title, 
-											menu;
+	menu;
 	private static AdminWindow 				aw;
 	private static PlayWindow 				pw;
 	private static JMenuBar 				menubar;
 	private static Scanner 					sc = new Scanner(System.in);
-	private static Sound					theme = new Sound("FamilyFeud-Theme.wav"),
-											blip = new Sound("FamilyFeud-Blip.wav"),
-											bell = new Sound("FamilyFeud-Bell.wav"),
-											strike = new Sound("ff-strike3.wav"),
-											dup = new Sound("FamilyFeud-Buzzer1.wav");
+	private static Sound					theme = new Sound("./wav/FamilyFeud-Theme.wav"),
+			blip = new Sound("./wav/FamilyFeud-Blip.wav"),
+			bell = new Sound("./wav/FamilyFeud-Bell.wav"),
+			strike = new Sound("./wav/ff-strike3.wav"),
+			dup = new Sound("./wav/FamilyFeud-Buzzer1.wav");
 
 	public static void main(String[] args) throws FileNotFoundException {
-
-		//		if (DEBUG) { 	// skip menu            
-		//			playGame();
-		//		} else {
-//		theme.play();
 		showMenu();
-		//		}
 	}
 
 	/* Setup methods */
@@ -107,11 +101,12 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuFrame frame = new MenuFrame();
-					frame.setVisible(true);
+//					MenuFrame frame = new MenuFrame();
+//					frame.setVisible(true);
 					if (qpacks == null) {
 						qpacks = new ArrayList<QuestionPack>();
 					}
+					showLoadQuestionPackWindow();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -165,7 +160,7 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Creates a new PlayWindow for each new question
 	 */
@@ -208,11 +203,8 @@ public class Main {
 			playerName = Input.getString();
 			teams[slot].addPlayer(new Player(playerName));
 			Text.out("[1] Add Another\n[2] Done");
-			//			cur_player++;
 			choice = Input.getInt(2);
 		}
-
-		//		cur_player = 0;		// reset
 	}
 
 	/**
@@ -266,10 +258,6 @@ public class Main {
 							str = fileSC.nextLine();
 						Text.debug("\tAnswer = " + aText + ", " + aPoints + "%");
 					}
-
-					//					if (str.equalsIgnoreCase("END")) {
-					//						Text.debug(str);
-					//					}
 					questions.add(new Question(qText, answers));
 					Text.debug("Question '" + qText + "' added\n}\n");
 				}
@@ -278,31 +266,12 @@ public class Main {
 				Text.debug("Adding QPACK::" + packname);
 				questions = new ArrayList<Question>();
 				cur_question_num = 0;
-
-				//			} else if (fileSC.hasNextLine()) {
-				//				str = fileSC.nextLine();
 			}
-			//			} else {
-			//				str = fileSC.nextLine();
-			//			}
 			Text.debug("str = " + str);
 			if (foundPack) {
-				//			qpack = new QuestiosnPack(packname, questions);
-				//				qpacks.add(new QuestionPack(packname, questions));
-				//				questions.clear();
-				//				cur_question_num = 0;
 				foundPack = false;
-				//				Text.debug("Adding QPACK::" + packname);
 			}
 		}
-		//		} else {
-		//			Text.out(packname + " not found! Create a new pack named " + packname + "?\n[0] Yes\n[1] No");
-		//			int choice = Input.getInt(2);
-		//			if (choice == 0) {
-		//				QuestionPacker.makeQuestionPack(packname);
-		//			}
-		//			loadQuestions();
-		//		}
 	}
 
 	/**
@@ -312,10 +281,9 @@ public class Main {
 	public static void saveQPack() {
 		Text.debug("qpacks size = " + qpacks.size());
 		Text.debug("qpack size = " + qpack.size());
-//		qpacks.add(qpack);
 
 		try {
-			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("questions.txt", true)));
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(QUESTION_FILE, true)));
 
 			// write name
 			out.print("\nPACK::'" + qpack.name() + "'");
@@ -414,9 +382,19 @@ public class Main {
 	 * Adds points to question jackpot.
 	 */
 	public static void addPoints(int points) {
+		if (Main.cur_question_num == 3) {
+			points *= 2;
+		}
 		cur_points += points;
 		Text.debug(Integer.toString(cur_points));
+		Text.out(Integer.toString(cur_points));
 		pw.setPoints(cur_points);
+
+		// if: in Fast Money mode, hard-wire points without requiring nextQuestion request
+		if (FAST_MONEY) {
+			teams[cur_team].addPoints(points);
+			pw.setPoints(teams[cur_team].getPoints());
+		}
 	}
 
 	/**
@@ -425,9 +403,7 @@ public class Main {
 	public static void awardPoints() {
 		if (cur_team != -1) {
 			teams[cur_team].addPoints(cur_points);
-			if (teams[cur_team].getPoints() >= POINTS_TO_WIN) {
-				declareWinner();
-			}
+			Text.debug("Team '" + teams[cur_team].getName() + "' points: " + teams[cur_team].getPoints());
 		}
 	}
 
@@ -436,21 +412,27 @@ public class Main {
 	 */
 	public static void updateTeamPoints() {
 		if (cur_team != -1) {
+			Text.out("Points = " + teams[cur_team].getPoints());
 			pw.setTeamPoints(teams[cur_team].getPoints(), cur_team);
 		}
 	}
 
 	private static void declareWinner() {
-		Text.debug(cur_team + " wins!!");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					if (cur_team != -1) {
 						WinnerFrame frame = new WinnerFrame();
 						frame.setVisible(true);
-						frame.setWinnerText(teams[cur_team].getName() + " Wins!");
+						if (teams[cur_team].getPoints() >= POINTS_TO_WIN_FM) {
+							frame.setWinnerText(teams[cur_team].getName() + " Wins!");
+						}
+
+						else {
+							frame.setWinnerText("Too Bad!");
+						}
 					}
-					
+
 					else {
 						EXIT();
 					}
@@ -463,48 +445,73 @@ public class Main {
 	}
 
 	/**
-	 * Called after all answers have been revealed. Gets new question, at
-	 * random, from QuestionPack. Sets up a new AdminWindow, if enabled.
+	 * Called after 'Next Question' button is pressed;
+	 * Gets new question from NewQuestionFrame;
+	 * Awards jackpot to selected team (not in Fast Money mode);
+	 * Sets up a new AdminWindow.
 	 */
 	public static void nextQuestion() {
-		Text.debug("Loading next question");
+		Text.debug("Loading next question...");
 		cur_question_num++;
+
 		if (!FAST_MONEY) {
 			awardPoints();
 			updateTeamPoints();
+
+			// if: only five questions remain, start Fast Money mode
+			if (qpack.size() == 5) {
+				setFAST_MONEY();
+				
+				selections = new int[5];
+				for (int i=0; i<selections.length; i++) {
+					selections[i] = (i);
+				}
+				
+//				Main.newQuestion(selections[fm_cur_question]); 
+//				Text.debug("Requesting Fast Money mode...");
+			}
 		}
 
 		if (qpack.size() == 0) {
 			declareWinner();
+			Text.debug("QPack out of questions.  Declaring winner.");
 		} 
 
-		else if (FAST_MONEY) {
-			if (fm_cur_question == selections.length && !fm_player2) {
+		if (FAST_MONEY) {
+			Text.debug("fm_cur_question: " + fm_cur_question);
+
+			// if: Player 1 is done, reset for Player 2
+			if (fm_cur_question == selections.length && !fm_player2) {	
 				fm_cur_question = 0;
 				fm_player2 = true;
-				Text.debug("setting fm_player2 = true");
-
 				Main.newQuestion(selections[fm_cur_question]);
+				Text.debug("setting fm_player2 = true");
 				Text.debug("Setting up Fast Money question # " + fm_cur_question);
 			}
 
+			// if: both players are finished
 			else if (fm_cur_question == selections.length && fm_player2) {
 				Text.debug("Awarding Fast Money points");
 				awardPoints();
 				updateTeamPoints();
+				pw.setPoints(cur_points);
+				declareWinner();
+				Text.debug("Awarding " + teams[cur_team].getPoints() + " points for Fast Money...");
 			}
 
+			// else: next question
 			else {
 				Main.newQuestion(selections[fm_cur_question]);
 				Text.debug("Setting up Fast Money question # " + fm_cur_question);
 			}
-
 		}
 
+		/*		// if: either team has earned 300 points or more
 		else if (teams[0].getPoints() >= 300 || teams[1].getPoints() >= 300) {
 			setFAST_MONEY();
 		}
 
+		// if: only five questions remain
 		else if (qpack.size() == 5) {
 			setFAST_MONEY();
 			selections = new int[5];
@@ -514,7 +521,9 @@ public class Main {
 			Main.newQuestion(selections[fm_cur_question]);
 			Text.debug("EENT");
 		}
+		 */
 
+		// else: continue with regular questions
 		else {
 			cur_team = -1;
 			cur_points = 0;		// reset points between questions
@@ -537,7 +546,6 @@ public class Main {
 			});
 		}
 	}
-
 
 	/** 
 	 * Sets up a new AdminFrame and PlayFrame, based on user selection.
@@ -625,11 +633,11 @@ public class Main {
 	 * @param solved set to false if revealAll is clicked.  Points are not awarded.
 	 */
 	public static void revealAnswer(String ansText, int ansPoints, int slot, boolean solved) {
-		// play sound
-
 		pw.revealAnswer(ansText, slot);
-		if (solved && !FAST_MONEY) {
-			playSound("bell");
+		if (solved) {
+			if (!FAST_MONEY) { 
+				playSound("bell");
+			}
 			addPoints(ansPoints); 
 		}
 	}
@@ -666,6 +674,7 @@ public class Main {
 
 	public static void endGame() {
 		declareWinner();
+		Text.debug("Team '" + teams[cur_team].getName() + "' points: " + teams[cur_team].getPoints());
 	}
 
 	public static void EXIT() {
@@ -753,20 +762,29 @@ public class Main {
 	 * Sets the Fast Money team to whichever team has more points.
 	 */
 	public static void setFM_TEAM() {
+
+		// if: Team 1 has more points
 		if (teams[0].getPoints() > teams[1].getPoints()) {
 			cur_team = 0;
+			pw.removeTeamLabel(1);
 		}
 
 		else if (teams[0].getPoints() < teams[1].getPoints()) {
 			cur_team = 1;
+			pw.removeTeamLabel(0);
 		}
 
-		else {
+		// if: both teams have equal points, and not zero points
+		else if (teams[0].getPoints() == teams[1].getPoints()  && teams[0].getPoints() > 0) {
 			cur_team = new Random().nextInt(1);
 		}
 
+		// else: if not points were awarded, default to first team
+		else {
+			cur_team = 0;
+		}
+
 		Text.debug("Cur_Team = " + cur_team);
-		pw.setTeamLabel(cur_team);
 	}
 
 	public static int getCUR_QUESTION_NUM() {
@@ -786,14 +804,16 @@ public class Main {
 	}
 
 	/**
-	 * Called from LoadQuestionFrame.  Begins Fast Money mode.
+	 * Called from LoadQuestionFrame, or when QPack has five questions remaining.  Begins Fast Money mode.
 	 */
 	public static void setFAST_MONEY() {
 		Text.debug("Entering Fast Money mode");
 		FAST_MONEY = true;
 		cur_question_num = 0;
+		fm_cur_question = 0;
 		total_questions = 10;
 		setFM_TEAM();
+		teams[cur_team].resetPoints();
 	}
 
 	/**

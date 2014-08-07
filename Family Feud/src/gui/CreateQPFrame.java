@@ -28,8 +28,8 @@ public class CreateQPFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CreateQPFrame frame = new CreateQPFrame();
-					frame.setVisible(true);
+//					CreateQPFrame frame = new CreateQPFrame();
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -131,5 +131,4 @@ public class CreateQPFrame extends JFrame {
 			btnSave.setEnabled(true);
 		}
 	}
-
 }

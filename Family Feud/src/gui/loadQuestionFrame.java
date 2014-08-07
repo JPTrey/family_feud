@@ -23,9 +23,15 @@ import java.awt.GridLayout;
 
 import javax.swing.JSeparator;
 
+/**
+ * Prompts admin to select next question to play;
+ * Admin can toggle Fast Money mode
+ * Requires five questions, if in Fast Money mode.
+ * @author jonpaulsimonelli
+ */
 public class loadQuestionFrame extends JFrame {
 
-	private JPanel contentPane;
+	private JPanel 	contentPane;
 	private JButton selectButton, fastMoneyButton;
 	private int[]	selections;				// array of Fast Money question indices
 	private int		fm_cur_question = 0;		// index of current Fast Money question

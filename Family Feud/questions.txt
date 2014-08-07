@@ -56,3 +56,13 @@ Q::"How are you?"
 Q::"What's my final grade?"
 	A::"A"=90
 	A::"F"=10
+PACK::'Food'
+Q::"Favorite Foods"
+	A::"Pizza"=43
+	A::"Ice Cream"=22
+	A::"Soda"=11
+	A::"Cabbage"=1
+Q::"Toppings"
+	A::"Pepperoni"=88
+	A::"Sausage"=8
+	A::"Cereal"=1

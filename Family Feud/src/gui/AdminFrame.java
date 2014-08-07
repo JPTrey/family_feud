@@ -27,14 +27,14 @@ public class AdminFrame extends JFrame {
 	private JPanel				contentPane;
 	private JLabel 				questLabel, questCountLabel, teamLabel, strikesLabel;
 	private JButton 			ansButton1, ansButton2, ansButton3, ansButton4, ansButton5, 
-	ansButton6, ansButton7, ansButton8, ansButton9, ansButton10;
+								ansButton6, ansButton7, ansButton8, ansButton9, ansButton10;
 	private int					cur_strikes, ansRemaining;
 	private int 				ansButton1Pts, ansButton2Pts, ansButton3Pts, ansButton4Pts, ansButton5Pts, 
-	ansButton6Pts, ansButton7Pts, ansButton8Pts, ansButton9Pts, ansButton10Pts; 
+								ansButton6Pts, ansButton7Pts, ansButton8Pts, ansButton9Pts, ansButton10Pts; 
 	private JButton				strikeButton, revealAllButton, nextButton, team1Button, team2Button;
 	private JPanel				countPanel;
 
-	// Fast Money vars
+	// Fast Money variables
 	private int					slot;							// used for caching answers/points for Fast Money round
 	private String[]			ansCache = new String[10];		// stores answers for Fast Money round
 	private int[]				ptsCache = new int[10];			// stores answer points for Fast Money round
@@ -366,7 +366,7 @@ public class AdminFrame extends JFrame {
 		cmdPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		contentPane.add(cmdPanel, BorderLayout.EAST);
 		cmdPanel.setLayout(new GridLayout(0, 1, 0, 0));
-
+		
 		cur_strikes = 0;
 		strikeButton = new JButton("Strike");
 		strikeButton.addActionListener(new ActionListener() {
@@ -411,31 +411,31 @@ public class AdminFrame extends JFrame {
 				setStrikesLabel();
 				Main.nextQuestion();
 				teamLabel.setText("No Team Controls");
-				team1Button.setEnabled(true);
-				team2Button.setEnabled(true);
+				 team1Button.setEnabled(true);
+				 team2Button.setEnabled(true);
 			}
 		});
-		nextButton.setEnabled(false);
+		nextButton.setEnabled(true);
 		cmdPanel.add(nextButton);
 
-		team1Button = new JButton(Main.getTEAM_NAME(0) + " Controls");
+		team1Button = new JButton("'" + Main.getTEAM_NAME(0) + "' Controls");
 		team1Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main.setCUR_TEAM(0);
-				teamLabel.setText(Main.getCUR_TEAM_NAME() + " Controls");
-				team1Button.setEnabled(false);
-				team2Button.setEnabled(false);
+				teamLabel.setText("'" + Main.getCUR_TEAM_NAME() + "' Controls");
+				 team1Button.setEnabled(false);
+				 team2Button.setEnabled(true);
 			}
 		});
 		cmdPanel.add(team1Button);
 
-		team2Button = new JButton(Main.getTEAM_NAME(1) + " Controls");
+		team2Button = new JButton("'" + Main.getTEAM_NAME(1) + "' Controls");
 		team2Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main.setCUR_TEAM(1);
-				teamLabel.setText(Main.getCUR_TEAM().getName());
-				team1Button.setEnabled(false);
-				team2Button.setEnabled(false);
+				teamLabel.setText("'" + Main.getCUR_TEAM().getName() + "' Controls");
+				 team1Button.setEnabled(true);
+				 team2Button.setEnabled(false);
 			}
 		});
 		cmdPanel.add(team2Button);
@@ -458,7 +458,7 @@ public class AdminFrame extends JFrame {
 		// reset variables
 		revealAllButton.setEnabled(true);
 		strikeButton.setEnabled(true);
-		nextButton.setEnabled(false);
+		nextButton.setEnabled(true);
 		ansButton1.setVisible(false);
 		ansButton2.setVisible(false);
 		ansButton3.setVisible(false);
@@ -474,6 +474,7 @@ public class AdminFrame extends JFrame {
 			setTitle("Fast Money - Admin");
 			team1Button.setEnabled(false);
 			team2Button.setEnabled(false);
+			nextButton.setEnabled(false);
 			teamLabel.setText(Main.getCUR_TEAM_NAME() + " Controls");
 			questCountLabel.setText("Question " + Main.getCUR_QUESTION_NUM() +
 					" of " + Main.getTOTAL_QUESTIONS());
@@ -607,8 +608,8 @@ public class AdminFrame extends JFrame {
 				}
 				nextButton.setEnabled(true);
 				revealAllButton.setEnabled(false);
-				team1Button.setEnabled(false);
-				team2Button.setEnabled(false);
+				// team1Button.setEnabled(false);
+				// team2Button.setEnabled(false);
 			}
 		}
 	});
@@ -649,39 +650,26 @@ public void switchTeamLabel() {
 }
 
 /**
- * Called when five answers have been selected during Fast Money round.  Reveals all answers.
+ * Called whenever five answers have been selected during Fast Money round.  Reveals all answers.
  */
 private void revealCached() {
-	boolean addPoints = false;			// true: add points to total, false: just reveal text
-	Text.debug("Revealing all");
-
-	if (slot == 10) {
-		addPoints = true;
-	}
+	Text.debug("Revealing all answers...");
 
 	// reveal player 1's choices
 	for (int i=0; i<5; i++) {
 		Text.debug("Revealing " + ansCache[i].toString());
-		Main.revealAnswer(ansCache[i], ptsCache[i], i+1, addPoints);
+		Main.revealAnswer(ansCache[i], ptsCache[i], i+1, false);
 		revealAllButton.setText("Conceal");
 	}
 
-	// reveal all choices
+	// if: all Fast Money answered cached, reveal all choices
 	if (slot == 10) {
-		for (int i=5; i<ansCache.length; i++) {
-			Text.debug("" +i);
-			if (ansCache[i].equalsIgnoreCase(ansCache[i-5])) {	// if: duplicates are found
-				Main.revealAnswer(ansCache[i], 0, (i+1), false);
-				Text.debug("Found duplicate in slot " + (i-4));
-			}
-
-			else {
+		for (int i=0; i<ansCache.length; i++) {
+			Text.debug("ansCache slot: " +i);
 				Main.revealAnswer(ansCache[i], ptsCache[i], (i+1), true);
 				Text.debug("Revealing answer in slot " + (i+1));
-			}
 		}
 	}
-
 }
 
 /**

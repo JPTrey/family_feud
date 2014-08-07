@@ -47,4 +47,5 @@ public class Team {
 	public String getPlayerName(int cur_player) { return players.get(cur_player).getName(); }
 	public int getPoints() { return points; }
 	public int getStrikeCount() { return strikes; }
+	public void resetPoints() { points = 0; }
 }
