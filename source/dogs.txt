@@ -1,0 +1,19 @@
+PACK::'DOGS'
+Q::"Name a word that most people yell at their dogs:"
+	A::"No"=50
+	A::"Sit"=25
+	A::"Stop"=24
+	A::"Down"=1
+Q::"Name something that is harder to do if you have braces:"
+	A::"Chew"=59
+	A::"Brush Teeth"=8
+	A::"Talk"=6
+Q::"Name a Bad Job for Someone Who's Accident Prone:"
+	A::"Driver"=33
+	A::"Construction"=20
+	A::"Police Officer"=11
+	A::"Food Services"=10
+	A::"Glass Maker"=9
+	A::"Window Washer"=7
+	A::"Surgeon"=6
+END	
