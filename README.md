@@ -9,7 +9,7 @@ This software is provided as-is, and does not come with any warranty.  Its autho
 The sound libraries were written by Barbara Ericson (ericson@cc.gatech.edu).  GUI development was templated using WindowBuilder.  Family Feud is written in Java 6, using Eclipse, and has been tested for use in OS X and Windows.  Special thanks to Dr. Leo Porter for his advisory during the development and deployment of this project.
 
 Startup Guide:
-Launch the game using the included JAR file in 'Family Feud.zip'.  Family Feud operates using "Question Packs" or "QPacks" to extract question, answer, and points data.  The file 'questions.txt' is loaded at run-time, and is automatically generated if not already present.  Question Packs are written and read as plain text, and can be modified either manually, or using the included interface by selected "New". 
+Launch the game using the included JAR file in 'JAR.zip'.  Family Feud operates using "Question Packs" or "QPacks" to extract question, answer, and points data.  The file 'questions.txt' is loaded at run-time, and is automatically generated if not already present.  Question Packs are written and read as plain text, and can be modified either manually, or using the included interface by selected "New". 
 
 Gameplay supports two teams.  When playing, questions may be selected one by one, with points tallied between selections.  In the event that either: Fast Money mode is selected; a team has earned 300 or more points; or only five questions remain, Fast Money mode is activated.  If Fast Money mode is activated before any questions were played, Team 1 will be selected to play.
 
