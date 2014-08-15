@@ -6,7 +6,7 @@ Family Feud version 1.0	by Jon Paul, 2014
 Disclaimer: 
 This software is provided as-is, and does not come with any warranty.  Its author is not responsible for any data loss or damages incurred through the use of this software.  This program is freeware, and may not be distributed for any commercial purpose.  
 
-The sound libraries were written by Barbara Ericson (ericson@cc.gatech.edu).  GUI development was templated using WindowBuilder.  Family Feud is written in Java 6, using Eclipse, and has been tested for use on OS X and Windows.  Special thanks to Dr. Leo Porter for his advisory during the development and deployment of this project.
+The sound libraries were written by Dr. Barbara Ericson (ericson@cc.gatech.edu).  GUI development was templated using WindowBuilder.  Family Feud is written in Java 6, using Eclipse, and has been tested for use on OS X and Windows.  Special thanks to Dr. Leo Porter for his advisory during the development and deployment of this project.
 
 Startup Guide:
 Launch the game using the included JAR file in 'JAR.zip'.  Family Feud operates using "Question Packs" or "QPacks" to extract question, answer, and points data.  The file 'questions.txt' is loaded at run-time, and is automatically generated if not already present.  Question Packs are written and read as plain text, and can be modified either manually, or using the included interface by selected "New". 
